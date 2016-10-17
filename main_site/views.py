@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.core.files import File
-from .models import Categories, Document
+from .models import SCategories, Document
 from .form import SearchForm, DocumentForm, ImportForm
 from .convert import ConvertToXML
 from django.conf import settings
@@ -41,7 +41,7 @@ class ImportView(View):
 			return redirect('/')
 		form = ImportForm(request.GET)
 		if form.is_valid() and form.cleaned_data.get('q') == 2:
-			categories_list = Categories.objects.all()
+			categories_list = SCategories.objects.all()
 			file_name = form.cleaned_data.get('fn')
 			file_size = form.cleaned_data.get('f_size')
 			headers = form.cleaned_data.get('headers')

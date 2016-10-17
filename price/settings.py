@@ -23,13 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_87%$1#mv##6-jlfytq=hgwi#kchg1m6fo-lp%bvmahi2opdqo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    'price.top555.by',
-    'www.price.top555.by',
-    'http://price.top555.by',
-    'http://www.price.top555.by',
+    # 'price.top555.by',
+    # 'www.price.top555.by',
+    # 'http://price.top555.by',
+    # 'http://www.price.top555.by',
 ]
 
 # Application definition
