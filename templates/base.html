@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% block title %}{% endblock %}</title>
+		{% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'main_site/styles.css' %}">
+		<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		{% block header_content %}{% endblock %}
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a href="http://top555.by" class="navbar-left" style="margin-right: 39px;">
+						{% load staticfiles %}
+						<img src="{% static 'main_site/images/shapka1.png' %}" height="50">
+					</a>
+				</div>
+				{% block navbar_content %}{% endblock %}
+			</div>
+		</nav>
+		<div class="container-fluid content">
+			<div class="row content">
+				<div class="col-md-2 content"></div>
+				<div class="col-md-8 content bg-1">
+					{% block content %}{% endblock %}
+				</div>
+				<div class="col-md-2 content"></div>
+			</div>
+		</div>
+	</body>
+</html>

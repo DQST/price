@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Поиск{% endblock %}
+{% block navbar_content %}
+	<ul class="nav navbar-nav">
+		<li><a href="/price/"><span class="glyphicon glyphicon-home"></span> Главная</a></li>
+		<li><a href="/admin/">Админ</a></li>
+		<li>
+			<form class="navbar-form form-inline" action="/price/" method="get">
+				{% csrf_token %}
+				<div class="form-group">
+					<input name="query" type="text" class="form-control" value="{{ query }}" placeholder="Введите запрос..." autofocus>
+				</div>
+				<button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-search"/></button>
+			</form>
+		</li>
+	</ul>
+	<ul class="nav navbar-nav navbar-right">
+		<li><a href="/price/upload/"><span class="glyphicon glyphicon-upload"></span> Импорт</a></li>
+		<li><a href="#"><span class="glyphicon glyphicon-download"></span> Экспорт</a></li>
+		<li><a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Выход</a></li>
+	</ul>
+{% endblock %}
+{% block content %}
+	<div style="margin-top: 7%;">
+	{% if query %}
+		<div class="panel panel-info">
+			<div class="panel-heading">Вы искали: {{ query }}</div>
+			<div class="panel-body">
+				{% for i in data %}
+					<p>i</p>
+				{% empty %}
+					<p>Ничего не найдено :(</p>
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+	</div>
+{% endblock %}

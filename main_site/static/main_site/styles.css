@@ -1,0 +1,6 @@
+html, body, .content {
+	height: 100%; 
+}
+.bg-1 {
+	background-color: #f2f4f7;
+}
