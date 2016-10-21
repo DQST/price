@@ -3,29 +3,70 @@
 	<head>
 		<meta charset="utf-8">
 		<title>{% block title %}{% endblock %}</title>
-		{% load staticfiles %}
-		<link rel="stylesheet" type="text/css" href="{% static 'main_site/styles.css' %}">
 		<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-		{% block header_content %}{% endblock %}
+		<style type="text/css">
+			html, body, .content {
+				height: 100%;
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var connections = $('#connections');
+				var file_headers = $('#file-headers');
+				var json_object = {};
+				$('#connect-button').click(function() {
+					if($('#std-headers').val() != '' && file_headers.val() != '')
+					{
+						var atrr = $('#std-headers option:selected').attr('value')
+						json_object[atrr] = file_headers.val()[0];
+						var json_string = JSON.stringify(json_object);
+						connections.val(json_string);
+					}
+				});
+				$('#reset-button').click(function() {
+					connections.empty();
+				});
+				$('.dropdown-menu li a').on('click', function(e) {
+					e.preventDefault();
+					var filter_name = $(this).text();
+					var filter_value = $(this).attr('href').replace('#', '');
+					$('#search_concept').text(filter_name);
+					$('#search_filter').val(filter_value);
+				});
+				$('ul.pagination li').on('click', function(e) {
+					e.preventDefault();
+					var q = $('.form-control').val();
+					var filter = $('#search_filter').attr('value');
+					var csrf = $("input[name='csrfmiddlewaretoken']").val();
+					var page_num = Number($(this).text()) - 1;
+					$.get('/price/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+page_num,
+						function(data) {
+							$('body').html(data);
+						}
+					);
+				});
+			});
+		</script>
 	</head>
-	<body>
-		<nav class="navbar navbar-default navbar-fixed-top">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a href="http://top555.by" class="navbar-left" style="margin-right: 39px;">
-						{% load staticfiles %}
-						<img src="{% static 'main_site/images/shapka1.png' %}" height="50">
-					</a>
-				</div>
-				{% block navbar_content %}{% endblock %}
+	<body id="content">
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Прайс лист</a>
 			</div>
+			{% block navbar_content %}{% endblock %}
 		</nav>
 		<div class="container-fluid content">
 			<div class="row content">
 				<div class="col-md-2 content"></div>
-				<div class="col-md-8 content bg-1">
+				<div class="col-md-8 content">
 					{% block content %}{% endblock %}
 				</div>
 				<div class="col-md-2 content"></div>

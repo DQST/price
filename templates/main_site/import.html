@@ -15,7 +15,7 @@
 				<form enctype="multipart/form-data" method="post">
 					{% csrf_token %}
 					<div class="form-group">
-						<label>Загрузить файл:</label>
+						<label>Загрузите файл:</label>
 						<input name="file" type="file" required>
 					</div>
 					<div class="form-group">
@@ -25,6 +25,10 @@
 					<div class="form-group">
 						<label>Строка данных:</label>
 						<input class="form-control" name="row_data_offset" type="number" min="2" value="2" required/>
+					</div>
+					<div class="checkbox">
+						<label><input name="multitable" type="checkbox">Multitable</label>
+						<span class="help-block">Разбивает файл по пустым строкам.</span>
 					</div>
 					<button type="submit" class="btn btn-success">
 						<span class="glyphicon glyphicon-cloud-upload"></span> Загрузить

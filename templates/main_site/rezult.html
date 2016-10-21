@@ -1,38 +1,100 @@
 {% extends 'base.html' %}
 {% block title %}Поиск{% endblock %}
 {% block navbar_content %}
-	<ul class="nav navbar-nav">
-		<li><a href="/price/"><span class="glyphicon glyphicon-home"></span> Главная</a></li>
-		<li><a href="/admin/">Админ</a></li>
-		<li>
-			<form class="navbar-form form-inline" action="/price/" method="get">
+	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<ul class="nav navbar-nav">
+			<li><a href="/price/"><span class="glyphicon glyphicon-home"></span> Главная</a></li>
+			{% if user.is_superuser %}
+				<li><a href="/admin/">Админ</a></li>
+			{% endif %}
+		</ul>
+		<div class="col-sm-3 col-md-3">
+			<form class="navbar-form" role="search">
 				{% csrf_token %}
-				<div class="form-group">
-					<input name="query" type="text" class="form-control" value="{{ query }}" placeholder="Введите запрос..." autofocus>
+				<div class="input-group">
+					<input type="text" name="query" class="form-control" value="{{ query }}" placeholder="Поиск">
+					<input type="hidden" name="search_filter" value="name" class="form-control">
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-default">
+							<span class="glyphicon glyphicon-search">
+							<span class="sr-only">Search</span>
+							</span>
+						</button>
+					</span>
 				</div>
-				<button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-search"/></button>
 			</form>
-		</li>
-	</ul>
-	<ul class="nav navbar-nav navbar-right">
-		<li><a href="/price/upload/"><span class="glyphicon glyphicon-upload"></span> Импорт</a></li>
-		<li><a href="#"><span class="glyphicon glyphicon-download"></span> Экспорт</a></li>
-		<li><a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Выход</a></li>
-	</ul>
+		</div>
+		<ul class="nav navbar-nav navbar-right">
+			{% if user.is_superuser %}
+				<li><a href="/price/upload/"><span class="glyphicon glyphicon-upload"></span> Импорт</a></li>
+				<li class="disabled"><a href="#"><span class="glyphicon glyphicon-download"></span> Экспорт</a></li>
+			{% endif %}
+			<li><a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Выход</a></li>
+		</ul>
+	</div>
 {% endblock %}
 {% block content %}
-	<div style="margin-top: 7%;">
+	<div style="margin-top: 8%;">
 	{% if query %}
-		<div class="panel panel-info">
-			<div class="panel-heading">Вы искали: {{ query }}</div>
-			<div class="panel-body">
-				{% for i in data %}
-					<p>i</p>
-				{% empty %}
-					<p>Ничего не найдено :(</p>
-				{% endfor %}
+		{% if data %}
+			<div class="alert alert-success fade in">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				{% if multiple %}
+					<strong title="Вы успешный человек!">УСПЕХ!</strong> Найдено: <b>{{ data_len }}</b> результатов.
+				{% else %}
+					<strong title="Вы успешный человек!">УСПЕХ!</strong> Запрос выполнен успешно.
+				{% endif %}
 			</div>
-		</div>
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Артикул</th>
+							<th>Название</th>
+							<th>Производитель</th>
+							<th>Цена розничная</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if not multiple %}
+							<tr>
+								<th>{{ data.articul }}</th>
+								<th>{{ data.name }}</th>
+								<th>{{ data.producer }}</th>
+								<th>{{ data.recomend_price }}</th>
+							</tr>
+						{% else %}
+							{% for i in data %}
+								<tr>
+									<th>{{ i.articul }}</th>
+									<th>{{ i.name }}</th>
+									<th>{{ i.producer }}</th>
+									<th>{{ i.recomend_price }}</th>
+								</tr>
+							{% endfor %}
+						{% endif %}
+					</tbody>
+				</table>
+				<div class="text-center">
+					<ul class="pagination">
+						{% for i in pages %}
+							{% if forloop.counter0 == p %}
+								<li class="active"><a href="#{{ i }}">{{ i }}</a></li>
+							{% else %}
+								<li><a href="#{{ i }}">{{ i }}</a></li>
+							{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		{% else %}
+			<div class="alert alert-danger fade in">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>ОШИБКА!</strong> По запросу: <b>{{ query }}</b> ничего не найдено. <b>Во всём вините программистов!</b>
+			</div>
+			<p>Попробуйте изменить запрос и повторить поиск.</p>
+			<p>Как вариант, можете поплакаться в желетку своему начальнику. Удачи!</p>
+		{% endif %}
 	{% endif %}
 	</div>
 {% endblock %}

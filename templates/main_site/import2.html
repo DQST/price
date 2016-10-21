@@ -1,73 +1,49 @@
 {% extends 'main_site/rezult.html' %}
 {% block title %}Импорт{% endblock %}
-{% block header_content %}
-	<script type="text/javascript">
-		$(document).ready(function() {
-			var connections = $('#connections');
-			var file_headers = $('#file-headers');
-			var json_object = {
-						'url': null,
-						'brand_id': null,
-						'shop_id': null,
-						'name': null,
-						'annotation': null,
-						'body': null,
-						'price': null,
-						'compare_price': null,
-						'sku': null,
-						'opt_price': null,
-					};
-			$('#connect-button').click(function() {
-				if($('#std-headers').val() != '' && file_headers.val() != '')
-				{
-					var atrr = $('#std-headers option:selected').attr('value')
-					json_object[atrr] = file_headers.val()[0];
-					var json_string = JSON.stringify(json_object);
-					connections.val(json_string);
-				}
-			});
-			$('#reset-button').click(function() {
-				connections.empty();
-			});
-		});
-	</script>
-{% endblock %}
 {% block content %}
 	<div style="margin-top: 7%;">
 		<div class="row">
 			<div class="col-md-2">
 				<h3>Шаг 2:</h3>
+				<div class="form-group">
+					<p><label>Файл:</label> {{ file_name }}</p>
+					<p><label>Размер файла:</label> {{ file_size|filesizeformat }}</p>
+				</div>
 			</div>
 			<div class="col-md-8">
-				<form method="post">
+				<form action="/price/parse/" method="post">
 					{% csrf_token %}
 					<div class="form-group">
-						<p><label>Файл:</label> {{ file_name }}</p>
-						<p><label>Размер файла:</label> {{ file_size|filesizeformat }}</p>
+						<label>Выберите категорию:</label>
+						<select name="category" class="form-control">
+							{% if categories_list %}
+								<option value="not_select">Не выбрана</option>
+								{% for i in categories_list %}
+									<option value="{{ i.id }}">{{ i.name }}</option>
+								{% endfor %}
+							{% else %}
+								<option value="empty">Нет доступных категорий</option>
+							{% endif %}
+						</select>
 					</div>
 					<div class="form-group">
-						<label>Выберите категорию:</label>
-						<select class="form-control">
-							{% for i in categories_list %}
-								<option value="{{ i }}">{{ i }}</option>
-							{% endfor %}
-						</select>
+						<label>Введите поставщика:</label>
+						<input class="form-control" name="dealer" type="text" placeholder="Название предприятия" required/>
 					</div>
 					<div class="form-group">
 						<label>Свяжите данные:</label>
 						<div class="row">
 							<div class="col-md-5">
 								<select id="std-headers" multiple size="8" class="form-control">
-									<option value="sku">Артикул</option>
+									<option value="articul">Артикул</option>
 									<option value="name">Название</option>
-									<option value="price">Цена</option>
-									<option value="opt_price">Цена оптовая</option>
-									<option value="compare_price">Цена диллерская</option>
-									<option value="annotation">краткое описание</option>
-									<option value="body">Описание</option>
-									<option value="brand_id">Бренд</option>
-									<option value="shop_id">Поставщик</option>
-									<option value="url">URL</option>
+									<option value="model">Модель</option>
+									<option value="brand_name">Бренд</option>
+									<option value="producer">Производитель</option>
+									<option value="rozn_price">Цена розничная</option>
+									<option value="recomend_price">Рекомендованная цена</option>
+									<option value="dealer_price">Цена диллерская</option>
+									<option value="balance">Остаток</option>
 								</select>
 							</div>
 							<div class="col-md-2" style="margin-top: 60px;">
@@ -85,10 +61,11 @@
 					<div class="form-group">
 						<label>Связи:</label>
 						<textarea id="connections" name="connections" class="form-control" rows="5"></textarea>
+						<input name="file" type="hidden" value="{{ file_name }}"></input>
 					</div>
 					<div class="form-group">
 						<button type="submit" id="sumbit-button" class="btn btn-success">
-							<span class="glyphicon glyphicon-save"></span> Сохранить
+							<span class="glyphicon glyphicon-saved"></span> Сохранить
 						</button>
 						<button type="reset" id="reset-button" class="btn btn-danger">
 							<span class="glyphicon glyphicon-erase"></span> Сброс

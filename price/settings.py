@@ -26,10 +26,7 @@ SECRET_KEY = '_87%$1#mv##6-jlfytq=hgwi#kchg1m6fo-lp%bvmahi2opdqo'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    # 'price.top555.by',
-    # 'www.price.top555.by',
-    # 'http://price.top555.by',
-    # 'http://www.price.top555.by',
+    # 'localhost',
 ]
 
 # Application definition
@@ -39,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
+    # 'django.contrib.messages',
     'django.contrib.staticfiles',
     'main_site',
 ]
@@ -82,12 +79,14 @@ WSGI_APPLICATION = 'price.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'zaimavto_tolkai',
-        'USER': 'zaimavto_lexskal',
-        'PASSWORD': '5671117Skl',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'mysql_cymysql',
+        # 'NAME': 'tolkaiby_price',
+        # 'USER': 'tolkaiby_dimas',
+        # 'PASSWORD': 'dima1996',
+        # 'HOST': 'localhost',
+        # 'PORT': '3306',
     }
 }
 
@@ -128,7 +127,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_ROOT = '/home/zaimavto/public_html/price.top555.by/static/'
 STATIC_URL = '/static/'
-MEDIA_ROOT = '/home/zaimavto/public_html/price.top555.by/media/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'www/price.tolkai.by/static/')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'www/price.tolkai.by/media/')
 MEDIA_URL = '/media/'
