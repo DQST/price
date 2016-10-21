@@ -24,7 +24,7 @@
 				</div>
 			</form>
 		</div>
-		<ul class="nav navbar-nav navbar-right">
+		<ul class="nav navbar-nav navbar-right" style="margin-right: 1px;">
 			{% if user.is_superuser %}
 				<li><a href="/price/upload/"><span class="glyphicon glyphicon-upload"></span> Импорт</a></li>
 				<li class="disabled"><a href="#"><span class="glyphicon glyphicon-download"></span> Экспорт</a></li>
@@ -34,7 +34,7 @@
 	</div>
 {% endblock %}
 {% block content %}
-	<div style="margin-top: 8%;">
+	<div style="margin-top: 60px;">
 	{% if query %}
 		{% if data %}
 			<div class="alert alert-success fade in">
