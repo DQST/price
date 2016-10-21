@@ -78,6 +78,7 @@ class ImportView(View):
 			})
 		return render(request, 'main_site/import.html')
 
+
 class ParseView(View):
 	def load(self, obj, file, category, dealer):
 		import xml.etree.ElementTree as ET

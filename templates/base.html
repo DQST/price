@@ -28,13 +28,13 @@
 				$('#reset-button').click(function() {
 					connections.empty();
 				});
-				$('.dropdown-menu li a').on('click', function(e) {
-					e.preventDefault();
-					var filter_name = $(this).text();
-					var filter_value = $(this).attr('href').replace('#', '');
-					$('#search_concept').text(filter_name);
-					$('#search_filter').val(filter_value);
-				});
+				// $('.dropdown-menu li a').on('click', function(e) {
+				// 	e.preventDefault();
+				// 	var filter_name = $(this).text();
+				// 	var filter_value = $(this).attr('href').replace('#', '');
+				// 	$('#search_concept').text(filter_name);
+				// 	$('#search_filter').val(filter_value);
+				// });
 				$('ul.pagination li').on('click', function(e) {
 					e.preventDefault();
 					var q = $('.form-control').val();
