@@ -49,9 +49,9 @@
 			<div class="alert alert-success fade in">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 				{% if articles.paginator.count > 1 %}
-					<strong title="Вы успешный человек!">УСПЕХ!</strong> Найдено: <b>{{ articles.paginator.count }}</b> результатов.
+					<strong title="Да детка!">YEAP!</strong> Всего найдено: <b>{{ articles.paginator.count }}</b> результатов.
 				{% else %}
-					<strong title="Вы успешный человек!">УСПЕХ!</strong> Запрос выполнен успешно.
+					<strong title="Да детка!">YEAP!</strong> Запрос выполнен успешно.
 				{% endif %}
 			</div>
 			<div class="table-responsive">
@@ -101,11 +101,13 @@
 		{% else %}
 			<div class="alert alert-danger fade in">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				<strong>ОШИБКА!</strong> По запросу: <b>{{ query }}</b> ничего не найдено. <b>Во всём вините программистов!</b>
+				<strong title="Дратути!">ОШИБКА!</strong> По запросу: <b>{{ query }}</b> ничего не найдено. <b>Во всём вините программистов!</b>
 			</div>
 			<p>Попробуйте изменить запрос и повторить поиск.</p>
 			<p>Как вариант, можете поплакаться в желетку своему начальнику. Удачи!</p>
 		{% endif %}
+	{% else %}
+
 	{% endif %}
 	</div>
 {% endblock %}

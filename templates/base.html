@@ -45,7 +45,6 @@
 					$.get('/price/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
 						function(data) {
 							$('body').html(data);
-							$('.dropdown-toggle').dropdown();
 							$('body *').each(function(i, el) {
 								if($(this).is('meta') || $(this).is('title') || $(this).is('script') || 
 									$(this).is('link') || $(this).is('style'))
@@ -53,6 +52,7 @@
 								else
 									return;
 							});
+							$('.dropdown-toggle').dropdown();
 						}
 					);
 				});
