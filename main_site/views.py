@@ -7,6 +7,9 @@ from django.conf import settings
 
 
 class SearchView(View):
+	def __init__(self):
+		self.max_count = 30
+
 	def check(self, data):
 		multiple = False
 		if len(data) == 1:
@@ -23,22 +26,24 @@ class SearchView(View):
 		return self.check(data)
 
 	def get(self, request):
-		multiple, data_len, pages, p = False, None, None, 0
 		if not request.user.is_authenticated():
 			return redirect('/')
 		
 		form = SearchForm(request.GET)
 		if form.is_valid():
+			multiple, data_len, pages, p = False, None, None, 0
 			q = form.cleaned_data.get('query')
 			filter_by = form.cleaned_data.get('search_filter')
 			if 'p' in request.GET and request.GET['p']:
 				p = int(request.GET['p'])
-			page_offset = p * 30
+			page_offset = p * self.max_count
 			data, multiple = self.parse(q, filter_by)
 			
 			if multiple:
 				data_len = len(data)
 				pages = [i+1 for i in range(round(data_len / 30))]
+				if self.max_count< data_len <= self.max_count + 10:
+					pages.append(pages[len(pages) - 1] + 1)
 				data = data[page_offset : 30 + page_offset]
 			
 			return render(request, 'main_site/rezult.html', {'query': q, 'data': data, 'data_len': data_len , \
