@@ -8,40 +8,37 @@
 				<li><a href="/admin/">Админ</a></li>
 			{% endif %}
 		</ul>
-		<div class="col-sm-3 col-md-3">
-			<form class="navbar-form" role="search">
-				{% csrf_token %}
-				<div class="input-group">
-					<div class="input-group-btn search-panel">
-						<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-							<span id="search_concept">Название</span> <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li class="dropdown-header">Фильтр:</li>
-							<li><a href="#name">Название</a></li>
-							<!-- <li class="divider"></li> -->
-							<li><a href="#articul">Артикул</a></li>
-						</ul>
-					</div>
-					<input type="text" name="query" class="form-control" value="{{ query }}" placeholder="Поиск">
-					<input type="hidden" name="search_filter" value="name">
-					<span class="input-group-btn">
-						<button type="submit" class="btn btn-primary">
-							<span class="glyphicon glyphicon-search">
-							<span class="sr-only">Search</span>
-							</span>
-						</button>
-					</span>
-				</div>
-			</form>
-		</div>
-		<ul class="nav navbar-nav navbar-right" style="margin-right: 1px;">
+		<ul class="nav navbar-nav navbar-right" style="margin-right: 0px;">
 			{% if user.is_superuser %}
 				<li><a href="/price/upload/"><span class="glyphicon glyphicon-upload"></span> Импорт</a></li>
 				<li class="disabled"><a href="#"><span class="glyphicon glyphicon-download"></span> Экспорт</a></li>
 			{% endif %}
 			<li><a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Выход</a></li>
 		</ul>
+		<form class="navbar-form-alt" role="search">
+			{% csrf_token %}
+			<div class="input-group">
+				<div class="input-group-btn search-panel">
+					<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+						<span id="search_concept">Название</span> <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li class="dropdown-header">Фильтр:</li>
+						<li><a href="#name">Название</a></li>
+						<li><a href="#articul">Артикул</a></li>
+					</ul>
+				</div>
+				<input type="text" name="query" class="form-control" value="{{ query }}" placeholder="Поиск" autocomplete="off" autofocus="autofocus">
+				<input type="hidden" name="search_filter" value="name">
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-primary">
+						<span class="glyphicon glyphicon-search">
+						<span class="sr-only">Search</span>
+						</span>
+					</button>
+				</span>
+			</div>
+		</form>
 	</div>
 {% endblock %}
 {% block content %}
