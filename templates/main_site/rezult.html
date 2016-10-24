@@ -20,15 +20,15 @@
 			<div class="input-group">
 				<div class="input-group-btn search-panel">
 					<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-						<span id="search_concept">Название</span> <span class="caret"></span>
+						<span id="search_concept">Фильтр:</span> <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu">
-						<li class="dropdown-header">Фильтр:</li>
-						<li><a href="#name">Название</a></li>
-						<li><a href="#articul">Артикул</a></li>
+						<li class="dropdown-header">Фильтры:</li>
+						<li><a href="#name">По названию</a></li>
+						<li><a href="#articul">По артиклу</a></li>
 					</ul>
 				</div>
-				<input type="text" name="query" class="form-control" value="{{ query }}" placeholder="Поиск" autocomplete="off" autofocus="autofocus">
+				<input type="text" name="query" class="form-control" value="{{ query }}" placeholder="Поиск" autocomplete="on" autofocus="autofocus">
 				<input type="hidden" name="search_filter" value="name">
 				<span class="input-group-btn">
 					<button type="submit" class="btn btn-primary">
