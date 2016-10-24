@@ -28,13 +28,13 @@
 				$('#reset-button').click(function() {
 					connections.empty();
 				});
-				// $('.dropdown-menu li a').on('click', function(e) {
-				// 	e.preventDefault();
-				// 	var filter_name = $(this).text();
-				// 	var filter_value = $(this).attr('href').replace('#', '');
-				// 	$('#search_concept').text(filter_name);
-				// 	$('#search_filter').val(filter_value);
-				// });
+				$('.dropdown-menu li a').on('click', function(e) {
+					e.preventDefault();
+					var filter_name = $(this).text();
+					var filter_value = $(this).attr('href').replace('#', '');
+					$('#search_concept').text(filter_name);
+					$('input[name=search_filter]').val(filter_value);
+				});
 				$('ul.pagination li').on('click', function(e) {
 					e.preventDefault();
 					var q = $('.form-control').val();
@@ -44,13 +44,21 @@
 					$.get('/price/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+page_num,
 						function(data) {
 							$('body').html(data);
+							$('.dropdown-toggle').dropdown();
+							$('body *').each(function(i, el) {
+								if($(this).is('meta') || $(this).is('title') || $(this).is('script') || 
+									$(this).is('link') || $(this).is('style'))
+									$(this).remove();
+								else
+									return;
+							});
 						}
 					);
 				});
 			});
 		</script>
 	</head>
-	<body id="content">
+	<body>
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
