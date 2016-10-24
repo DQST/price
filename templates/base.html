@@ -41,8 +41,8 @@
 					var q = $('.form-control').val();
 					var filter = $('#search_filter').attr('value');
 					var csrf = $("input[name='csrfmiddlewaretoken']").val();
-					var page_num = Number($(this).text()) - 1;
-					$.get('/price/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+page_num,
+					var p = Number($(this).text()) - 1;
+					$.get('/price/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
 						function(data) {
 							$('body').html(data);
 							$('.dropdown-toggle').dropdown();
