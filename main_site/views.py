@@ -4,51 +4,43 @@ from .models import *
 from .form import *
 from .convert import ToXml
 from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class SearchView(View):
-	def __init__(self):
-		self.max_count = 30
-
-	def check(self, data):
-		multiple = False
-		if len(data) == 1:
-			data = data[0]
-		elif len(data) > 1:
-			multiple = True
-		return data, multiple
-
 	def parse(self, query, filter_by):
 		if filter_by == 'articul':
 			data = Products.objects.filter(articul=query)
 		else:
 			data = Products.objects.filter(name__contains=query)
-		return self.check(data)
+		return data
 
 	def get(self, request):
 		if not request.user.is_authenticated():
 			return redirect('/')
-		
+		page = 0
 		form = SearchForm(request.GET)
 		if form.is_valid():
-			multiple, data_len, pages, p = False, None, None, 0
 			q = form.cleaned_data.get('query')
 			filter_by = form.cleaned_data.get('search_filter')
+			
 			if 'p' in request.GET and request.GET['p']:
-				p = int(request.GET['p'])
-			page_offset = p * self.max_count
-			data, multiple = self.parse(q, filter_by)
+				page = int(request.GET['p'])
+			data = self.parse(q, filter_by)
+			paginator = Paginator(data, per_page=30, orphans=10)
+
+			try:
+				articles = paginator.page(page)
+			except PageNotAnInteger:
+				articles = paginator.page(1)
+			except EmptyPage:
+				articles = paginator.page(paginator.num_pages)
 			
-			if multiple:
-				data_len = len(data)
-				pages = [i+1 for i in range(round(data_len / 30))]
-				if self.max_count< data_len <= self.max_count + 10:
-					pages.append(pages[len(pages) - 1] + 1)
-				data = data[page_offset : 30 + page_offset]
+			if len(articles) == 1:
+				articles = articles[0]
 			
-			return render(request, 'main_site/rezult.html', {'query': q, 'data': data, 'data_len': data_len , \
-				'multiple': multiple, 'user': request.user, 'pages': pages, 'p': p})
-		return render(request, 'main_site/rezult.html', {'user': request.user})
+			return render(request, 'main_site/rezult.html', {'query': q, 'articles': articles, 'p': page})
+		return render(request, 'main_site/rezult.html')
 
 
 class ImportView(View):
