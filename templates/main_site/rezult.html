@@ -20,7 +20,7 @@
 			<div class="input-group">
 				<div class="input-group-btn search-panel">
 					<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-						<span id="search_concept">Фильтр:</span> <span class="caret"></span>
+						<span id="search_concept">Фильтры</span> <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu">
 						<li class="dropdown-header">Фильтры:</li>
@@ -30,6 +30,7 @@
 				</div>
 				<input type="text" name="query" class="form-control" value="{{ query }}" placeholder="Поиск" autocomplete="on" autofocus="autofocus">
 				<input type="hidden" name="search_filter" value="name">
+				<input type="hidden" name="p" value="0">
 				<span class="input-group-btn">
 					<button type="submit" class="btn btn-primary">
 						<span class="glyphicon glyphicon-search">
@@ -44,11 +45,11 @@
 {% block content %}
 	<div style="margin-top: 60px;">
 	{% if query %}
-		{% if data %}
+		{% if articles %}
 			<div class="alert alert-success fade in">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				{% if multiple %}
-					<strong title="Вы успешный человек!">УСПЕХ!</strong> Найдено: <b>{{ data_len }}</b> результатов.
+				{% if articles.paginator.count > 1 %}
+					<strong title="Вы успешный человек!">УСПЕХ!</strong> Найдено: <b>{{ articles.paginator.count }}</b> результатов.
 				{% else %}
 					<strong title="Вы успешный человек!">УСПЕХ!</strong> Запрос выполнен успешно.
 				{% endif %}
@@ -64,15 +65,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% if not multiple %}
-							<tr>
-								<th>{{ data.articul }}</th>
-								<th>{{ data.name }}</th>
-								<th>{{ data.producer }}</th>
-								<th>{{ data.recomend_price }}</th>
-							</tr>
-						{% else %}
-							{% for i in data %}
+						{% if articles|length > 1 %}
+							{% for i in articles %}
 								<tr>
 									<th>{{ i.articul }}</th>
 									<th>{{ i.name }}</th>
@@ -80,20 +74,29 @@
 									<th>{{ i.recomend_price }}</th>
 								</tr>
 							{% endfor %}
+						{% else %}
+							<tr>
+								<th>{{ articles.articul }}</th>
+								<th>{{ articles.name }}</th>
+								<th>{{ articles.producer }}</th>
+								<th>{{ articles.recomend_price }}</th>
+							</tr>
 						{% endif %}
 					</tbody>
 				</table>
-				<div class="text-center">
-					<ul class="pagination">
-						{% for i in pages %}
-							{% if forloop.counter0 == p %}
-								<li class="active"><a href="#{{ i }}">{{ i }}</a></li>
-							{% else %}
-								<li><a href="#{{ i }}">{{ i }}</a></li>
-							{% endif %}
-						{% endfor %}
-					</ul>
-				</div>
+					{% if articles.paginator.page_range|length > 1 %}
+						<div class="text-center">
+							<ul class="pagination">
+								{% for i in articles.paginator.page_range %}
+									{% if forloop.counter0 == p %}
+										<li class="active"><a href="#{{ i }}">{{ i }}</a></li>
+									{% else %}
+										<li><a href="#{{ i }}">{{ i }}</a></li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						</div>
+					{% endif %}
 			</div>
 		{% else %}
 			<div class="alert alert-danger fade in">
