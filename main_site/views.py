@@ -36,10 +36,18 @@ class SearchView(View):
 			except EmptyPage:
 				articles = paginator.page(paginator.num_pages)
 			
+			paginations = [i+1 for i in range(paginator.num_pages)]
 			if len(articles) == 1:
 				articles = articles[0]
+			if 0 <= page < 4:
+				paginations = paginations[:9]
+			elif paginator.num_pages - 5 < page <= paginator.num_pages:
+				paginations = paginations[-9:]
+			elif 4 <= page <= paginator.num_pages - 5:
+				paginations = paginations[page-4:page+5]
 			
-			return render(request, 'main_site/rezult.html', {'query': q, 'articles': articles, 'p': page})
+			return render(request, 'main_site/rezult.html', {'query': q, 'articles': articles, \
+				'p': page+1, 'paginations': paginations})
 		return render(request, 'main_site/rezult.html')
 
 
