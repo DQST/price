@@ -90,6 +90,8 @@
 								{% for i in paginations %}
 									{% if i == p %}
 										<li class="active"><a href="#{{ i }}">{{ i }}</a></li>
+									{% elif i == '...' %}
+										<li class="disabled"><a href="#">...</a></li>
 									{% else %}
 										<li><a href="#{{ i }}">{{ i }}</a></li>
 									{% endif %}
