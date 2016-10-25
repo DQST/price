@@ -52,3 +52,31 @@ class ToXml(BConverter):
 
 		with codecs.open(path, 'w', encoding='utf-8') as f:
 			f.write('%s\n' % pretty_string)
+
+
+class ConXLS:
+	def __init__(self, path):
+		self.input_path = path
+	
+	def __unmerged_value(self, rowx, colx, sh):
+		for crange in sh.merged_cells:
+			rlo, rhi, clo, chi = crange
+			if rowx in range(rlo, rhi):
+				if colx in range(clo, chi):
+					return sh.cell_value(rlo,clo)
+		return sh.cell_value(rowx,colx)
+	
+	def save_as(self, path):
+		import xlrd
+		wb = xlrd.open_workbook(self.input_path, formatting_info=True)
+		xlsx_wb = openpyxl.Workbook()
+		xlsx_wb._sheets.clear()
+		for name in wb.sheet_names():
+			sh = wb.sheet_by_name(name)
+			xlsx_wb.create_sheet(name)
+			sh2 = xlsx_wb.active
+			for i in range(sh.nrows):
+				for j in range(sh.ncols):
+					val = self.__unmerged_value(i, j, sh)
+					sh2.cell(row=i+1, column=j+1, value=val)
+		xlsx_wb.save(path)

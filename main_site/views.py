@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from .models import *
 from .form import *
-from .convert import ToXml
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -23,7 +22,7 @@ class SearchView(View):
 		if paginator.num_pages > max_pages_count:
 				if len(articles) == 1:
 					articles = articles[0]
-				if 0 <= cur_page < 4:
+				if 0 <= cur_page < 7:
 					paginations = paginations[:9]
 					paginations.extend(['...', paginator.num_pages])
 				elif paginator.num_pages - 7 <= cur_page <= paginator.num_pages:
@@ -31,7 +30,7 @@ class SearchView(View):
 					paginations.reverse()
 					paginations.extend(['...', 1])
 					paginations.reverse()
-				elif 4 <= cur_page <= paginator.num_pages - 5:
+				elif 7 <= cur_page <= paginator.num_pages - 5:
 					paginations = paginations[cur_page-4:cur_page+5]
 					paginations.extend(['...', paginator.num_pages])
 					paginations.reverse()
@@ -68,7 +67,19 @@ class SearchView(View):
 
 
 class ImportView(View):
+	def get_info(self, s=None):
+		name, ext, flag = '', '', False
+		for i in reversed(s):
+			if i != '.' and flag:
+				ext += i
+			elif flag == True:
+				name += i
+			else: 
+				flag = True
+		return name, ext
+
 	def post(self, request):
+		from .convert import ToXml, ConXLS
 		form = DocumentForm(request.POST, request.FILES)
 		if form.is_valid():
 			file = form.cleaned_data.get('file')
@@ -76,8 +87,14 @@ class ImportView(View):
 			data_offset = form.cleaned_data.get('row_data_offset')
 			newdoc = Documents(docfile=file)
 			newdoc.save()
-			conv = ToXml('%s/uploads/%s' % (settings.MEDIA_ROOT, file.name), head_offset, data_offset)
-			conv.save('%s/uploads/%s.xml' % (settings.MEDIA_ROOT, file.name[:file.name.index('.')]))
+			file_path = '%s/uploads/%s' % (settings.MEDIA_ROOT, file.name)
+			name, ext = self.get_info(file_path)
+			if ext == 'xls':
+				xls = ConXLS(file_path)
+				file_path = name + '.xlsx'
+				xls.save_as(file_path)
+			conv = ToXml(file_path, head_offset, data_offset)
+			conv.save(file_path.replace('xlsx', 'xml'))
 			headers = ','.join(conv.headers)
 			return redirect('/price/upload/?q=2&fn=%s&f_size=%s&headers=%s' % (file.name, file.size, headers))
 		return render(request, 'main_site/import.html', {'errors': form.errors})
