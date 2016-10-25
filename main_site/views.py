@@ -67,36 +67,57 @@ class SearchView(View):
 
 
 class ImportView(View):
-	def get_info(self, s=None):
-		name, ext, flag = '', '', False
+	def get_info(self, s):
+		file = ''
 		for i in reversed(s):
-			if i != '.' and flag:
+			if i != '/':
+				file += i
+			else:
+				break
+		file = ''.join(reversed(file))
+		name, ext, flag = '', '', False
+		for i in reversed(file):
+			if i != '.' and flag == False:
 				ext += i
 			elif flag == True:
 				name += i
-			else: 
+			else:
 				flag = True
-		return name, ext
+		return ''.join(reversed(name)), ''.join(reversed(ext))
 
 	def post(self, request):
-		from .convert import ToXml, ConXLS
+		from .convert import ToXML, ConXLS
+		import transliterate
+		from transliterate import slugify, detect_language
+
 		form = DocumentForm(request.POST, request.FILES)
 		if form.is_valid():
 			file = form.cleaned_data.get('file')
 			head_offset = form.cleaned_data.get('row_head_offset')
 			data_offset = form.cleaned_data.get('row_data_offset')
+			
+			name, ext = self.get_info(file.name)
+			
+			if detect_language(name):
+				name = slugify(name)
+
+			file.name = '%s.%s' % (name, ext)
 			newdoc = Documents(docfile=file)
 			newdoc.save()
-			file_path = '%s/uploads/%s' % (settings.MEDIA_ROOT, file.name)
-			name, ext = self.get_info(file_path)
+			
+			path = '%s%s' % (settings.MEDIA_ROOT, newdoc.docfile.name)
+			
 			if ext == 'xls':
-				xls = ConXLS(file_path)
-				file_path = name + '.xlsx'
-				xls.save_as(file_path)
-			conv = ToXml(file_path, head_offset, data_offset)
-			conv.save(file_path.replace('xlsx', 'xml'))
-			headers = ','.join(conv.headers)
-			return redirect('/price/upload/?q=2&fn=%s&f_size=%s&headers=%s' % (file.name, file.size, headers))
+				xls_file = ConXLS(path)
+				path = path.replace('xls', 'xlsx')
+				xls_file.save(path)
+			
+			xml = ToXML(path, head_offset, data_offset)
+			xml.save(path.replace('xlsx', 'xml'))
+			
+			headers = ','.join(xml.headers)
+			return redirect('/price/upload/?q=2&fn={name}&f_size={size}&headers={headers}'.format(name='%s.%s' % (name,ext), \
+				size=file.size, headers=headers))
 		return render(request, 'main_site/import.html', {'errors': form.errors})
 
 	def get(self, request):
@@ -121,7 +142,8 @@ class ParseView(View):
 	def load(self, obj, file, category, dealer):
 		import xml.etree.ElementTree as ET
 		file = file[:file.index('.')] + '.xml'
-		tree = ET.parse('%s/uploads/%s' % (settings.MEDIA_ROOT, file))
+		path = '%s/uploads/%s' % (settings.MEDIA_ROOT, file)
+		tree = ET.parse(path)
 		root = tree.getroot()
 		
 		category = Categories.objects.get(pk=category)

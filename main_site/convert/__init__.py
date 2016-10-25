@@ -1,10 +1,10 @@
 import openpyxl
 from yattag import *
-import codecs
+
 
 class BConverter(object):
 	def __init__(self, path, head_row=0, start_row=1):
-		wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+		wb = openpyxl.load_workbook(path, data_only=True)
 		self.sh = wb.active
 		self.headers = [i.value.capitalize() for i in self.sh[head_row:head_row] if i.value is not None]
 		for i in range(len(self.headers)):
@@ -13,21 +13,33 @@ class BConverter(object):
 			self.headers[i] = self.headers[i].replace('\n', '')
 		self.start_row = abs(start_row) - 1
 		self.objects = self.__parse(head_row)
+
+	def __empty(self, o):
+		e = 0
+		for i in o:
+			if i[1] == '':
+				e += 1
+		if e == len(o):
+			return True
+		return False
 	
 	def __parse(self, head_row):
 		out = []
 		for row in self.sh.iter_rows(row_offset=self.start_row):
 			obj = [(key, (lambda x: '' if x is None else x)(el.value)) for key, el in zip(self.headers, row)]
-			out.append(obj)
+			if not self.__empty(obj):
+				out.append(obj)
 		return out
 	
 	def save(self, path):
 		raise Exception('Переопределить метод!')
 
-class ToXml(BConverter):
+
+class ToXML(BConverter):
 	def save(self, path):
 		'''Doc string:
 		Save file as xml using argument: path'''
+		import codecs
 		doc, tag, text, line = Doc().ttl()
 
 		headers_len = len(self.headers)
@@ -66,7 +78,7 @@ class ConXLS:
 					return sh.cell_value(rlo,clo)
 		return sh.cell_value(rowx,colx)
 	
-	def save_as(self, path):
+	def save(self, path):
 		import xlrd
 		wb = xlrd.open_workbook(self.input_path, formatting_info=True)
 		xlsx_wb = openpyxl.Workbook()
