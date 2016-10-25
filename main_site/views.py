@@ -15,6 +15,30 @@ class SearchView(View):
 			data = Products.objects.filter(name__contains=query)
 		return data
 
+	def get_pagintations(self, paginator=None, articles=None, cur_page=0, max_pages_count=9):
+		if paginator is None and articles is None:
+			return None
+
+		paginations = [i+1 for i in range(paginator.num_pages)]
+		if paginator.num_pages > max_pages_count:
+				if len(articles) == 1:
+					articles = articles[0]
+				if 0 <= cur_page < 4:
+					paginations = paginations[:9]
+					paginations.extend(['...', paginator.num_pages])
+				elif paginator.num_pages - 7 <= cur_page <= paginator.num_pages:
+					paginations = paginations[-9:]
+					paginations.reverse()
+					paginations.extend(['...', 1])
+					paginations.reverse()
+				elif 4 <= cur_page <= paginator.num_pages - 5:
+					paginations = paginations[cur_page-4:cur_page+5]
+					paginations.extend(['...', paginator.num_pages])
+					paginations.reverse()
+					paginations.extend(['...', 1])
+					paginations.reverse()
+		return paginations
+
 	def get(self, request):
 		if not request.user.is_authenticated():
 			return redirect('/')
@@ -36,15 +60,7 @@ class SearchView(View):
 			except EmptyPage:
 				articles = paginator.page(paginator.num_pages)
 			
-			paginations = [i+1 for i in range(paginator.num_pages)]
-			if len(articles) == 1:
-				articles = articles[0]
-			if 0 <= page < 4:
-				paginations = paginations[:9]
-			elif paginator.num_pages - 5 < page <= paginator.num_pages:
-				paginations = paginations[-9:]
-			elif 4 <= page <= paginator.num_pages - 5:
-				paginations = paginations[page-4:page+5]
+			paginations = self.get_pagintations(paginator=paginator, articles=articles, cur_page=page)
 			
 			return render(request, 'main_site/rezult.html', {'query': q, 'articles': articles, \
 				'p': page+1, 'paginations': paginations})
