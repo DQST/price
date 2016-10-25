@@ -87,8 +87,8 @@
 					{% if articles.paginator.page_range|length > 1 %}
 						<div class="text-center">
 							<ul class="pagination">
-								{% for i in articles.paginator.page_range %}
-									{% if forloop.counter0 == p %}
+								{% for i in paginations %}
+									{% if i == p %}
 										<li class="active"><a href="#{{ i }}">{{ i }}</a></li>
 									{% else %}
 										<li><a href="#{{ i }}">{{ i }}</a></li>
