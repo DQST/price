@@ -143,7 +143,7 @@ class ImportView(View):
 class ParseView(View):
 	def load(self, obj, file, category, dealer):
 		import xml.etree.ElementTree as ET
-		file = file[:file.index('.')] + '.xml'
+		file = file.replace('xlsx', 'xml')
 		path = '%s/uploads/%s' % (settings.MEDIA_ROOT, file)
 		tree = ET.parse(path)
 		root = tree.getroot()
