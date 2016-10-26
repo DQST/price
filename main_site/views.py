@@ -10,7 +10,7 @@ class SearchView(View):
 	def get(self, request):
 		if not request.user.is_authenticated():
 			return redirect('/')
-		return render(request, 'main_site/rezult.html')
+		return render(request, 'base.html')
 
 
 class AjaxView(View):
@@ -50,7 +50,7 @@ class AjaxView(View):
 		if form.is_valid():
 			q = form.cleaned_data.get('query')
 			filter_by = form.cleaned_data.get('search_filter')
-			page = int(form.cleaned_data.get('p')) + 1
+			page = int(form.cleaned_data.get('p'))
 			data = self.parse(q, filter_by)
 			paginator = Paginator(data, per_page=30, orphans=10)
 
@@ -65,6 +65,7 @@ class AjaxView(View):
 			
 			return render(request, 'main_site/table.html', {'query': q, 'articles': articles, \
 				'p': page, 'paginations': paginations})
+		return redirect('/price/')
 
 
 class ImportView(View):
