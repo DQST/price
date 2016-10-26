@@ -63,7 +63,7 @@ class AjaxView(View):
 			
 			paginations = self.get_pagintations(paginator=paginator, articles=articles, cur_page=page)
 			
-			return render(request, 'main_site/rezult.html', {'query': q, 'articles': articles, \
+			return render(request, 'main_site/table.html', {'query': q, 'articles': articles, \
 				'p': page, 'paginations': paginations})
 
 
