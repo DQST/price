@@ -23,10 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_87%$1#mv##6-jlfytq=hgwi#kchg1m6fo-lp%bvmahi2opdqo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    # 'localhost',
+    'price.tolkaiby.vh95.hosterby.com',
 ]
 
 # Application definition
@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    # 'django.contrib.messages',
     'django.contrib.staticfiles',
     'main_site',
 ]
@@ -47,7 +46,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -79,14 +77,12 @@ WSGI_APPLICATION = 'price.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'ENGINE': 'mysql_cymysql',
-        # 'NAME': 'tolkaiby_price',
-        # 'USER': 'tolkaiby_dimas',
-        # 'PASSWORD': 'dima1996',
-        # 'HOST': 'localhost',
-        # 'PORT': '3306',
+        'ENGINE': 'mysql_cymysql',
+        'NAME': 'tolkaiby_price',
+        'USER': 'tolkaiby_dimas',
+        'PASSWORD': 'dima1996',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
