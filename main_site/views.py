@@ -41,6 +41,12 @@ class SearchView(View):
 	def get(self, request):
 		if not request.user.is_authenticated():
 			return redirect('/')
+		
+		return render(request, 'main_site/rezult.html')
+
+
+class AjaxView(View):
+	def get(self, request):
 		page = 0
 		form = SearchForm(request.GET)
 		if form.is_valid():
@@ -63,7 +69,6 @@ class SearchView(View):
 			
 			return render(request, 'main_site/rezult.html', {'query': q, 'articles': articles, \
 				'p': page+1, 'paginations': paginations})
-		return render(request, 'main_site/rezult.html')
 
 
 class ImportView(View):
