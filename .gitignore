@@ -1,6 +1,5 @@
-www/*
+/www/*
 *.pyc
-*.pyc
-__pycache__/*
-price/__pycache__/*
-main_site/__pycache__/*
+/__pycache__/*
+/price/__pycache__/*
+/main_site/__pycache__/*
