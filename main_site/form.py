@@ -4,6 +4,7 @@ from django import forms
 class SearchForm(forms.Form):
 	query = forms.CharField()
 	search_filter = forms.CharField()
+	p = forms.IntegerField()
 
 
 class LoginForm(forms.Form):
