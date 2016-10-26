@@ -20,22 +20,22 @@ class SearchView(View):
 
 		paginations = [i+1 for i in range(paginator.num_pages)]
 		if paginator.num_pages > max_pages_count:
-				if len(articles) == 1:
-					articles = articles[0]
-				if 0 <= cur_page < 7:
-					paginations = paginations[:9]
-					paginations.extend(['...', paginator.num_pages])
-				elif paginator.num_pages - 7 <= cur_page <= paginator.num_pages:
-					paginations = paginations[-9:]
-					paginations.reverse()
-					paginations.extend(['...', 1])
-					paginations.reverse()
-				elif 7 <= cur_page <= paginator.num_pages - 5:
-					paginations = paginations[cur_page-4:cur_page+5]
-					paginations.extend(['...', paginator.num_pages])
-					paginations.reverse()
-					paginations.extend(['...', 1])
-					paginations.reverse()
+			if len(articles) == 1:
+				articles = articles[0]
+			if 0 <= cur_page < 7:
+				paginations = paginations[:9]
+				paginations.extend(['...', paginator.num_pages])
+			elif paginator.num_pages - 7 <= cur_page <= paginator.num_pages:
+				paginations = paginations[-9:]
+				paginations.reverse()
+				paginations.extend(['...', 1])
+				paginations.reverse()
+			elif 7 <= cur_page <= paginator.num_pages - 5:
+				paginations = paginations[cur_page-4:cur_page+5]
+				paginations.extend(['...', paginator.num_pages])
+				paginations.reverse()
+				paginations.extend(['...', 1])
+				paginations.reverse()
 		return paginations
 
 	def get(self, request):
