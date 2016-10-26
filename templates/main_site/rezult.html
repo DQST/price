@@ -23,23 +23,14 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% if articles|length > 1 %}
-							{% for i in articles %}
-								<tr>
-									<th>{{ i.articul }}</th>
-									<th>{{ i.name }}</th>
-									<th>{{ i.producer }}</th>
-									<th>{{ i.recomend_price }}</th>
-								</tr>
-							{% endfor %}
-						{% else %}
+						{% for i in articles %}
 							<tr>
-								<th>{{ articles.articul }}</th>
-								<th>{{ articles.name }}</th>
-								<th>{{ articles.producer }}</th>
-								<th>{{ articles.recomend_price }}</th>
+								<th>{{ i.articul }}</th>
+								<th>{{ i.name }}</th>
+								<th>{{ i.producer }}</th>
+								<th>{{ i.recomend_price }}</th>
 							</tr>
-						{% endif %}
+						{% endfor %}
 					</tbody>
 				</table>
 					{% if articles.paginator.page_range|length > 1 %}
