@@ -26,7 +26,10 @@
 						{% for i in articles %}
 							<tr>
 								<th>{{ i.articul }}</th>
-								<th>{{ i.name }}</th>
+								<th>
+									<a href="#" title="Поставщик" data-toggle="popover" data-trigger="hover"
+									data-content="{{ i.dealer }}">{{ i.name }}</a>
+								</th>
 								<th>{{ i.producer }}</th>
 								<th>{{ i.recomend_price }}</th>
 							</tr>

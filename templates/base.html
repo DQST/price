@@ -12,6 +12,7 @@
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function() {
+				$('[data-toggle="popover"]').popover();
 				var connections = $('#connections');
 				var file_headers = $('#file-headers');
 				var json_object = {};
@@ -51,6 +52,7 @@
 									return;
 							});
 							$('.dropdown-toggle').dropdown();
+							$('[data-toggle="popover"]').popover();
 						}
 					);
 				});
