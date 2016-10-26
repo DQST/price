@@ -10,7 +10,7 @@ class SearchView(View):
 	def get(self, request):
 		if not request.user.is_authenticated():
 			return redirect('/')
-		return render(request, 'base.html')
+		return render(request, 'main_site/rezult.html')
 
 
 class AjaxView(View):
