@@ -7,6 +7,13 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class SearchView(View):
+	def get(self, request):
+		if not request.user.is_authenticated():
+			return redirect('/')
+		return render(request, 'main_site/rezult.html')
+
+
+class AjaxView(View):
 	def parse(self, query, filter_by):
 		if filter_by == 'articul':
 			data = Products.objects.filter(articul=query)
@@ -39,22 +46,11 @@ class SearchView(View):
 		return paginations
 
 	def get(self, request):
-		if not request.user.is_authenticated():
-			return redirect('/')
-		
-		return render(request, 'main_site/rezult.html')
-
-
-class AjaxView(View):
-	def get(self, request):
-		page = 0
 		form = SearchForm(request.GET)
 		if form.is_valid():
 			q = form.cleaned_data.get('query')
 			filter_by = form.cleaned_data.get('search_filter')
-			
-			if 'p' in request.GET and request.GET['p']:
-				page = int(request.GET['p'])
+			page = int(form.cleaned_data.get('p')) + 1
 			data = self.parse(q, filter_by)
 			paginator = Paginator(data, per_page=30, orphans=10)
 
@@ -68,7 +64,7 @@ class AjaxView(View):
 			paginations = self.get_pagintations(paginator=paginator, articles=articles, cur_page=page)
 			
 			return render(request, 'main_site/rezult.html', {'query': q, 'articles': articles, \
-				'p': page+1, 'paginations': paginations})
+				'p': page, 'paginations': paginations})
 
 
 class ImportView(View):
