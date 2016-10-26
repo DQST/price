@@ -1,0 +1,58 @@
+{% if query %}
+	{% if articles %}
+		<div class="alert alert-success fade in">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			{% if articles.paginator.count > 1 %}
+				<strong title="Да детка!">YEAP!</strong> Всего найдено: <b>{{ articles.paginator.count }}</b> результатов.
+			{% else %}
+				<strong title="Да детка!">YEAP!</strong> Запрос выполнен успешно.
+			{% endif %}
+		</div>
+		<div class="table-responsive">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Артикул</th>
+						<th>Название</th>
+						<th>Производитель</th>
+						<th>Цена розничная</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for i in articles %}
+						<tr>
+							<th>{{ i.articul }}</th>
+							<th>
+								<a href="#" title="Поставщик" data-toggle="popover" data-trigger="hover"
+								data-content="{{ i.dealer }}">{{ i.name }}</a>
+							</th>
+							<th>{{ i.producer }}</th>
+							<th>{{ i.recomend_price }}</th>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+				{% if articles.paginator.page_range|length > 1 %}
+					<div class="text-center">
+						<ul class="pagination">
+							{% for i in paginations %}
+								{% if i == p %}
+									<li class="active"><a href="#{{ i }}">{{ i }}</a></li>
+								{% elif i == '...' %}
+									<li class="disabled"><a href="#nop">...</a></li>
+								{% else %}
+									<li><a href="#{{ i }}">{{ i }}</a></li>
+								{% endif %}
+							{% endfor %}
+						</ul>
+					</div>
+				{% endif %}
+		</div>
+	{% else %}
+		<div class="alert alert-danger fade in">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong title="Дратути!">ОШИБКА!</strong> По запросу: <b>{{ query }}</b> ничего не найдено. <b>Во всём вините программистов!</b>
+		</div>
+		<p>Попробуйте изменить запрос и повторить поиск.</p>
+	{% endif %}
+{% endif %}

@@ -2,13 +2,14 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>{% block title %}{% endblock %}</title>
+		<title>{% block title %}Главная{% endblock %}</title>
 		<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<style type="text/css">
 			html, body, .content {height: 100%;}
-			.navbar-form-alt {margin:8px 0}
+			.navbar-form-alt {margin: 8px 0;}
+			#search-content {margin-top: 60px;}
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function() {
@@ -33,26 +34,28 @@
 					var filter_name = $(this).text();
 					var filter_value = $(this).attr('href').replace('#', '');
 					$('#search_concept').text(filter_name);
-					$('input[name=search_filter]').val(filter_value);
+					$('input[name="search_filter"]').val(filter_value);
 				});
-				$('ul.pagination li').on('click', function(e) {
+				$('#search-btn').on('click', function(e) {
 					e.preventDefault();
 					var q = $('.form-control').val();
-					var filter = $('#search_filter').attr('value');
-					var csrf = $("input[name='csrfmiddlewaretoken']").val();
-					var p = Number($(this).text()) - 1;
-					$.get('/price/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
+					var filter = $('input[name="search_filter"]').attr('value');
+					var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+					var p = Number($('input[name="p"]').attr('value'));
+					$.get('/price/ajax/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
 						function(data) {
-							$('body').html(data);
-							$('body *').each(function(i, el) {
-								if($(this).is('meta') || $(this).is('title') || $(this).is('script') || 
-									$(this).is('link') || $(this).is('style'))
-									$(this).remove();
-								else
-									return;
-							});
+							$('#search-content').html(data);
 							$('.dropdown-toggle').dropdown();
 							$('[data-toggle="popover"]').popover();
+							$('ul.pagination li a').on('click', function(e) {
+								e.preventDefault();
+								if($(this).attr('href') != "#nop") {
+									$('input[name="p"]').attr('value', $(this).text());
+									$('#search-btn').click();
+									$('title').text('Главная');
+									$('input[name="p"]').attr('value', 1);
+								}
+							});
 						}
 					);
 				});
@@ -99,10 +102,10 @@
 								</ul>
 							</div>
 							<input type="text" name="query" class="form-control" value="{{ query }}" placeholder="Поиск" autocomplete="on" autofocus="autofocus">
-							<input type="hidden" name="search_filter" id="search_filter" value="name">
-							<input type="hidden" name="p" value="0">
+							<input type="hidden" name="search_filter" value="name">
+							<input type="hidden" name="p" value="1">
 							<span class="input-group-btn">
-								<button type="submit" class="btn btn-primary">
+								<button class="btn btn-primary" id="search-btn">
 									<span class="glyphicon glyphicon-search">
 									<span class="sr-only">Search</span>
 									</span>
@@ -117,7 +120,9 @@
 			<div class="row content">
 				<div class="col-md-2 content"></div>
 				<div class="col-md-8 content">
-					{% block content %}{% endblock %}
+					<div id="search-content">
+						{% block content %}{% endblock %}
+					</div>
 				</div>
 				<div class="col-md-2 content"></div>
 			</div>
