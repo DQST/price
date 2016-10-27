@@ -8,5 +8,5 @@ urlpatterns = [
     url(r'^upload/$', ImportView.as_view()),
     url(r'^parse/$', ParseView.as_view()),
     url(r'^ajax/$', AjaxView.as_view()),
-    url(r'^fast/$', FastView.as_view()),
+    url(r'^fast/$', FastSearchView.as_view()),
 ]
