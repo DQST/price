@@ -70,22 +70,17 @@ class AjaxView(View):
 
 class ImportView(View):
 	def get_info(self, s):
+		import re
 		file = ''
 		for i in reversed(s):
 			if i != '/':
 				file += i
-			else:
-				break
-		file = ''.join(reversed(file))
-		name, ext, flag = '', '', False
-		for i in reversed(file):
-			if i != '.' and flag == False:
-				ext += i
-			elif flag == True:
-				name += i
-			else:
-				flag = True
-		return ''.join(reversed(name)), ''.join(reversed(ext))
+				continue
+			break
+		comp = re.compile('^\w+\.')
+		f_ext = comp.match(file).group(0)
+		f_name = ''.join(file.replace(f_ext, ''))
+		return f_name[::-1], f_ext[::-1][1:]
 
 	def post(self, request):
 		from .convert import ToXML, ConXLS
@@ -118,7 +113,7 @@ class ImportView(View):
 			xml.save(path.replace('xlsx', 'xml'))
 			
 			headers = ','.join(xml.headers)
-			return redirect('/price/upload/?q=2&fn={name}&f_size={size}&headers={headers}'.format(name='%s.%s' % (name,ext), \
+			return redirect('/price/upload/?q=2&fn={name}&f_size={size}&headers={headers}'.format(name=name+'.'+ext, \
 				size=file.size, headers=headers))
 		return render(request, 'main_site/import.html', {'errors': form.errors})
 
