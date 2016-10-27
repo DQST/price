@@ -3,13 +3,16 @@
 	<head>
 		<meta charset="utf-8">
 		<title>{% block title %}{% endblock %}</title>
-		<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+		<link href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<style type="text/css">
 			html, body, .content {height: 100%;}
 			.navbar-form-alt {margin: 8px 0;}
 			#search-content {margin-top: 60px;}
+			.ui-autocomplete {position: absolute; cursor: default;z-index:999999 !important;}
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function() {
@@ -28,6 +31,20 @@
 				});
 				$('#reset-button').click(function() {
 					connections.empty();
+				});
+				$('input[name=query]').autocomplete({
+					source: function(request, response) {
+						var q = $('.form-control').val();
+						var filter = $('input[name="search_filter"]').attr('value');
+						var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+						var p = Number($('input[name="p"]').attr('value'));
+						$.get('/price/ajax/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
+							function(data) {
+								// response(data);
+							}
+						);
+					},
+					minLength: 3,
 				});
 				$('.dropdown-menu li a').on('click', function(e) {
 					e.preventDefault();
