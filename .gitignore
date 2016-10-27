@@ -3,3 +3,4 @@
 /__pycache__/*
 /price/__pycache__/*
 /main_site/__pycache__/*
+*.sqlite3
