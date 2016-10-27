@@ -68,6 +68,17 @@ class AjaxView(View):
 		return redirect('/price/')
 
 
+class FastView(AjaxView):
+	def get(self, request):
+		from django.http import HttpResponse
+		if 'q' in request.GET and request.GET['q']:
+			q = request.GET['q']
+			data = self.parse(q, 'name')
+			if data:	
+				return HttpResponse('$'.join([i.name for i in data]))
+		return HttpResponse('Ничего не найдено: %s' % q)
+
+
 class ImportView(View):
 	def get_info(self, s):
 		import re
