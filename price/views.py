@@ -8,6 +8,7 @@ class LoginView(View):
 	def post(self, request):
 		user = LoginForm(request.POST)
 		if user.is_valid():
+			request.session.set_expiry(28800)
 			user_login = user.cleaned_data.get('login')
 			user_pass  = user.cleaned_data.get('password')
 			aut_user = authenticate(username=user_login, password=user_pass)
