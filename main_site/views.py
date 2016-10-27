@@ -68,7 +68,7 @@ class AjaxView(View):
 		return redirect('/price/')
 
 
-class FastView(AjaxView):
+class FastSearchView(AjaxView):
 	def get(self, request):
 		from django.http import HttpResponse
 		if 'q' in request.GET and request.GET['q']:
