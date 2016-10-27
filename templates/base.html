@@ -12,7 +12,13 @@
 			html, body, .content {height: 100%;}
 			.navbar-form-alt {margin: 8px 0;}
 			#search-content {margin-top: 60px;}
-			.ui-autocomplete {position: absolute; cursor: default;z-index:999999 !important;}
+			.ui-autocomplete {
+				z-index: 999999;
+				min-height: 50px;
+				height: 200px;
+				overflow-y: scroll;
+				overflow-x: hidden;
+			}
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function() {
@@ -35,12 +41,10 @@
 				$('input[name=query]').autocomplete({
 					source: function(request, response) {
 						var q = $('.form-control').val();
-						var filter = $('input[name="search_filter"]').attr('value');
 						var csrf = $('input[name="csrfmiddlewaretoken"]').val();
-						var p = Number($('input[name="p"]').attr('value'));
-						$.get('/price/ajax/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
+						$.get('/price/fast/?csrfmiddlewaretoken='+csrf+'&q='+q,
 							function(data) {
-								// response(data);
+								response(data.split('$'));
 							}
 						);
 					},
