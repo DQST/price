@@ -46,11 +46,13 @@
 					source: function(request, response) {
 						var q = $('.form-control').val();
 						var csrf = $('input[name="csrfmiddlewaretoken"]').val();
-						$.get('/price/fast/?csrfmiddlewaretoken='+csrf+'&q='+q,
-							function(data) {
-								response(data.split('$'));
-							}
-						);
+						if($('input[name="search_filter"]').attr('value') == 'name') {
+							$.get('/price/fast/?csrfmiddlewaretoken='+csrf+'&q='+q,
+								function(data) {
+									response(data.split('$'));
+								}
+							);
+						}
 					},
 					minLength: 3,
 				});
