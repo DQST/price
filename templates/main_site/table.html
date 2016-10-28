@@ -20,13 +20,13 @@
 			<tbody>
 				{% for i in articles %}
 					<tr>
-						<th class="text-left">{{ i.articul|default:'−' }}</th>
+						<th class="text-left">{{ i.articul|default:'&ndash;' }}</th>
 						<th class="text-left">
 							<a href="#" title="Поставщик" data-toggle="popover" data-trigger="hover"
 							data-content="{{ i.dealer }}">{{ i.name }}</a>
 						</th>
-						<th class="text-center">{{ i.producer|default:'−' }}</th>
-						<th class="text-center">{{ i.recomend_price|default:'−' }}</th>
+						<th class="text-center">{{ i.producer|default:'&ndash;' }}</th>
+						<th class="text-center">{{ i.recomend_price|default:'&ndash;' }}</th>
 					</tr>
 				{% endfor %}
 			</tbody>
@@ -38,7 +38,7 @@
 							{% if i == p %}
 								<li class="active"><a href="#{{ i }}">{{ i }}</a></li>
 							{% elif i == '...' %}
-								<li class="disabled"><a href="#nop">...</a></li>
+								<li class="disabled"><a href="#nop">&hellip;</a></li>
 							{% else %}
 								<li><a href="#{{ i }}">{{ i }}</a></li>
 							{% endif %}
