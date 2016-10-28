@@ -7,13 +7,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class SearchView(View):
-	def get(self, request):
-		if not request.user.is_authenticated():
-			return redirect('/')
-		return render(request, 'main_site/rezult.html')
-
-
-class AjaxView(View):
 	def parse(self, query, filter_by):
 		if filter_by == 'articul':
 			data = Products.objects.filter(articul=query)
@@ -44,7 +37,14 @@ class AjaxView(View):
 				paginations.extend(['...', 1])
 				paginations.reverse()
 		return paginations
+	
+	def get(self, request):
+		if not request.user.is_authenticated():
+			return redirect('/')
+		return render(request, 'main_site/rezult.html')
 
+
+class AjaxView(SearchView):
 	def get(self, request):
 		form = SearchForm(request.GET)
 		if form.is_valid():
@@ -68,7 +68,7 @@ class AjaxView(View):
 		return redirect('/price/')
 
 
-class FastSearchView(AjaxView):
+class FastSearchView(SearchView):
 	def get(self, request):
 		from django.http import HttpResponse
 		if 'q' in request.GET and request.GET['q']:
