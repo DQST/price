@@ -69,22 +69,24 @@
 					var filter = $('input[name="search_filter"]').attr('value');
 					var csrf = $('input[name="csrfmiddlewaretoken"]').val();
 					var p = Number($('input[name="p"]').attr('value'));
-					$.get('/price/ajax/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
-						function(data) {
-							$('#search-content').html(data);
-							$('.dropdown-toggle').dropdown();
-							$('[data-toggle="popover"]').popover();
-							$('ul.pagination li a').on('click', function(e) {
-								e.preventDefault();
-								if($(this).attr('href') != "#nop") {
-									$('input[name="p"]').attr('value', $(this).text());
-									$('#search-btn').click();
-									$('title').text('Главная');
-									$('input[name="p"]').attr('value', 1);
-								}
-							});
-						}
-					);
+					if(q.length > 0) {
+						$.get('/price/ajax/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
+							function(data) {
+								$('#search-content').html(data);
+								$('.dropdown-toggle').dropdown();
+								$('[data-toggle="popover"]').popover();
+								$('ul.pagination li a').on('click', function(e) {
+									e.preventDefault();
+									if($(this).attr('href') != "#nop") {
+										$('input[name="p"]').attr('value', $(this).text());
+										$('#search-btn').click();
+										$('title').text('Главная');
+										$('input[name="p"]').attr('value', 1);
+									}
+								});
+							}
+						);
+					}
 				});
 			});
 		</script>
