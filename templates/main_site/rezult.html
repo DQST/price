@@ -42,3 +42,7 @@
 		</form>
 	</div>
 {% endblock %}
+{% block content %}
+	{# Show last 30 items in page #}
+	{% include 'main_site/table.html' %}
+{% endblock %}
