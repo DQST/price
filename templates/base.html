@@ -34,10 +34,15 @@
 						json_object[atrr] = file_headers.val()[0];
 						var json_string = JSON.stringify(json_object);
 						connections.val(json_string);
+						if(('name' in json_object) && ('recomend_price' in json_object)) {
+							console.log('EPT!');
+							$('#sumbit-button').prop('disabled', false);
+						}
 					}
 				});
 				$('#reset-button').click(function() {
 					connections.empty();
+					$('#sumbit-button').prop('disabled', true);
 				});
 				$('input[name=query]').autocomplete({
 					source: function(request, response) {
