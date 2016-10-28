@@ -5,8 +5,10 @@
 		<div class="col-md-2">
 			<h3>Шаг 2:</h3>
 			<div class="form-group">
-				<p><label>Файл:</label> {{ file_name }}</p>
-				<p><label>Размер файла:</label> {{ file_size|filesizeformat }}</p>
+				<label>Файл:</label>
+				<p>{{ file_name }}</p>
+				<label>Размер файла:</label>
+				<p>{{ file_size|filesizeformat }}</p>
 			</div>
 		</div>
 		<div class="col-md-8">
@@ -35,12 +37,12 @@
 						<div class="col-md-5">
 							<select id="std-headers" multiple size="8" class="form-control">
 								<option value="articul">Артикул</option>
-								<option value="name">Название</option>
+								<option value="name" class="bolden">Название*</option>
 								<option value="model">Модель</option>
 								<option value="brand_name">Бренд</option>
 								<option value="producer">Производитель</option>
 								<option value="rozn_price">Цена розничная</option>
-								<option value="recomend_price">Рекомендованная цена</option>
+								<option value="recomend_price" class="bolden">Рекомендованная цена*</option>
 								<option value="dealer_price">Цена диллерская</option>
 								<option value="balance">Остаток</option>
 							</select>
@@ -59,11 +61,11 @@
 				</div>
 				<div class="form-group">
 					<label>Связи:</label>
-					<textarea id="connections" name="connections" class="form-control" rows="5"></textarea>
+					<textarea id="connections" name="connections" class="form-control" rows="5" disabled></textarea>
 					<input name="file" type="hidden" value="{{ file_name }}"></input>
 				</div>
 				<div class="form-group">
-					<button type="submit" id="sumbit-button" class="btn btn-success">
+					<button type="submit" id="sumbit-button" class="btn btn-success" disabled>
 						<span class="glyphicon glyphicon-saved"></span> Сохранить
 					</button>
 					<button type="reset" id="reset-button" class="btn btn-danger">
