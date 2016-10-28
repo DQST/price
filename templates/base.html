@@ -19,6 +19,7 @@
 				overflow-y: scroll;
 				overflow-x: hidden;
 			}
+			.bolden {font-weight: bold;}
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function() {
@@ -33,20 +34,25 @@
 						json_object[atrr] = file_headers.val()[0];
 						var json_string = JSON.stringify(json_object);
 						connections.val(json_string);
+						if(('name' in json_object) && ('recomend_price' in json_object))
+							$('#sumbit-button').prop('disabled', false);
 					}
 				});
 				$('#reset-button').click(function() {
 					connections.empty();
+					$('#sumbit-button').prop('disabled', true);
 				});
 				$('input[name=query]').autocomplete({
 					source: function(request, response) {
 						var q = $('.form-control').val();
 						var csrf = $('input[name="csrfmiddlewaretoken"]').val();
-						$.get('/price/fast/?csrfmiddlewaretoken='+csrf+'&q='+q,
-							function(data) {
-								response(data.split('$'));
-							}
-						);
+						if($('input[name="search_filter"]').attr('value') == 'name') {
+							$.get('/price/fast/?csrfmiddlewaretoken='+csrf+'&q='+q,
+								function(data) {
+									response(data.split('$'));
+								}
+							);
+						}
 					},
 					minLength: 3,
 				});
