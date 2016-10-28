@@ -37,11 +37,12 @@ class SearchView(View):
 				paginations.extend(['...', 1])
 				paginations.reverse()
 		return paginations
-	
+
 	def get(self, request):
 		if not request.user.is_authenticated():
 			return redirect('/')
-		return render(request, 'main_site/rezult.html')
+		articles = Products.objects.all().order_by('-id')[:30]
+		return render(request, 'main_site/rezult.html', {'query': 'None', 'articles': articles})
 
 
 class AjaxView(SearchView):
