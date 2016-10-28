@@ -42,7 +42,7 @@ class SearchView(View):
 		if not request.user.is_authenticated():
 			return redirect('/')
 		articles = Products.objects.all().order_by('-id')[:30]
-		return render(request, 'main_site/rezult.html', {'query': 'None', 'articles': articles})
+		return render(request, 'main_site/rezult.html', {'articles': articles})
 
 
 class AjaxView(SearchView):
