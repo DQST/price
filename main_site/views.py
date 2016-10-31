@@ -111,10 +111,7 @@ class ImportView(View):
 			
 			xml = ToXML(path, head_offset, data_offset)
 			xml.save(path.replace('xlsx', 'xml'))
-			
-			# headers = ','.join(xml.headers)
-			# return redirect('/price/upload/?q=2&fn={name}&f_size={size}&headers={headers}'.format(name=name+'.'+ext, \
-			# 	size=file.size, headers=headers))
+
 			return render(request, 'main_site/import2.html', {
 				'categories_list': Categories.objects.all(),
 				'file_name': name+'.'+ext,
@@ -127,20 +124,3 @@ class ImportView(View):
 		if not request.user.is_authenticated():
 			return redirect('/')
 		return render(request, 'main_site/import.html')
-
-	# def get(self, request):
-	# 	if not request.user.is_authenticated():
-	# 		return redirect('/')
-	# 	form = ImportForm(request.GET)
-	# 	if form.is_valid() and form.cleaned_data.get('q') == 2:
-	# 		categories_list = Categories.objects.all()
-	# 		file_name = form.cleaned_data.get('fn')
-	# 		file_size = form.cleaned_data.get('f_size')
-	# 		headers = form.cleaned_data.get('headers')
-	# 		return render(request, 'main_site/import2.html', {
-	# 			'categories_list': categories_list,
-	# 			'file_name': file_name,
-	# 			'file_size': file_size,
-	# 			'headers': headers.split(','),
-	# 		})
-	# 	return render(request, 'main_site/import.html')
