@@ -88,7 +88,7 @@ class ImportView(View):
 		return rez['name'], rez['ext']
 
 	def post(self, request):
-		from .convert import ToXML, ConXLS
+		from .convert import ToXML, XLStoXLSX
 		import transliterate
 		from transliterate import slugify, detect_language
 
@@ -105,7 +105,7 @@ class ImportView(View):
 			name, ext = self.get_info(path)
 			
 			if ext == 'xls':
-				xls_file = ConXLS(path)
+				xls_file = XLStoXLSX(path)
 				path = path.replace('xls', 'xlsx')
 				xls_file.save(path)
 			
@@ -122,6 +122,11 @@ class ImportView(View):
 				'headers': xml.headers,
 			})
 		return render(request, 'main_site/import.html', {'errors': form.errors})
+
+	def get(self, request):
+		if not request.user.is_authenticated():
+			return redirect('/')
+		return render(request, 'main_site/import.html')
 
 	# def get(self, request):
 	# 	if not request.user.is_authenticated():

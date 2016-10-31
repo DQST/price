@@ -35,7 +35,7 @@ class Products(models.Model):
 	category = models.ForeignKey(Categories, db_column='category_id', null=True, on_delete=models.SET_NULL)
 	dealer = models.ForeignKey(Dealer, db_column='dealer_id', null=True, on_delete=models.SET_NULL)
 	articul = models.CharField(max_length=255, null=True)			# артикул, maybe string!
-	name = models.CharField(max_length=255)							# название
+	name = models.CharField(max_length=255, null=True)				# название
 	model = models.CharField(max_length=255, null=True)				# модель
 	brand_name = models.CharField(max_length=255, null=True)		# брэнд
 	producer = models.CharField(max_length=255, null=True)			# производитель
