@@ -76,7 +76,7 @@ class FastSearchView(SearchView):
 			q = request.GET['q']
 			data = self.parse(q, 'name')
 			if data:	
-				return HttpResponse('$'.join([i.name for i in data]))
+				return HttpResponse('$'.join([i.name.strip() for i in data]))
 		return HttpResponse('Ничего не найдено: %s' % q)
 
 
