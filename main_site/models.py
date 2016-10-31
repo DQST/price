@@ -39,9 +39,9 @@ class Products(models.Model):
 	model = models.CharField(max_length=255, null=True)				# модель
 	brand_name = models.CharField(max_length=255, null=True)		# брэнд
 	producer = models.CharField(max_length=255, null=True)			# производитель
-	rozn_price = models.FloatField(null=True, blank=True)			# розничная цена
-	recomend_price = models.FloatField(null=True, blank=True)		# рекомендованная цена
-	dealer_price = models.FloatField(null=True, blank=True)			# диллерская цена
+	rozn_price = models.CharField(max_length=255, null=True)		# розничная цена
+	recomend_price = models.CharField(max_length=255, null=True)	# рекомендованная цена
+	dealer_price = models.CharField(max_length=255, null=True)		# диллерская цена
 	balance = models.CharField(db_column='ostatok', null=True, max_length=255)
 
 	def __str__(self):

@@ -21,15 +21,16 @@ class ParseView(View):
 			p = Products()
 			p.category = category
 			p.dealer = dealer
-			for k, v in zip(obj.keys(), o.findall('field')):
-				p.__dict__[k] = v.text
+			for k in obj.keys():
+				for i in o.findall('field'):
+					if obj[k] == i.get('name'):
+						p.__dict__[k] = i.text
 			p.save()
 
 
 	def post(self, request):
 		import json
 		parse_form = ParseForm(request.POST)
-		print('#####\nErrors:\n\t%s\n#####' % parse_form.errors)
 		if parse_form.is_valid():
 			json_str = parse_form.cleaned_data.get('connections')
 			file = parse_form.cleaned_data.get('file')
