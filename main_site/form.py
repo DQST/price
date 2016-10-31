@@ -18,13 +18,6 @@ class DocumentForm(forms.Form):
 	row_data_offset = forms.IntegerField()
 
 
-class ParseForm(forms.Form):
-	connections = forms.CharField()
-	file = forms.CharField()
-	category = forms.IntegerField()
-	dealer = forms.CharField(max_length=255)
-
-
 class ImportForm(forms.Form):
 	q = forms.IntegerField()
 	fn = forms.CharField()
