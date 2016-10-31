@@ -1,4 +1,5 @@
 from django.shortcuts import redirect
+from django.views.generic import View
 from main_site.models import *
 
 
