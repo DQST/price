@@ -83,16 +83,9 @@ class FastSearchView(SearchView):
 class ImportView(View):
 	def get_info(self, s):
 		import re
-		file = ''
-		for i in reversed(s):
-			if i != '/':
-				file += i
-				continue
-			break
-		comp = re.compile('^\w+\.')
-		f_ext = comp.match(file).group(0)
-		f_name = ''.join(file.replace(f_ext, ''))
-		return f_name[::-1], f_ext[::-1][1:]
+		comp = re.compile('uploads/(?P<name>.*?)\.(?P<ext>\w+)')
+		rez = comp.search(s).groupdict()
+		return rez['name'], rez['ext']
 
 	def post(self, request):
 		from .convert import ToXML, ConXLS
@@ -105,16 +98,11 @@ class ImportView(View):
 			head_offset = form.cleaned_data.get('row_head_offset')
 			data_offset = form.cleaned_data.get('row_data_offset')
 			
-			name, ext = self.get_info(file.name)
-			
-			if detect_language(name):
-				name = slugify(name)
-
-			file.name = '%s.%s' % (name, ext)
 			newdoc = Documents(docfile=file)
 			newdoc.save()
-			
+
 			path = '%s%s' % (settings.MEDIA_ROOT, newdoc.docfile.name)
+			name, ext = self.get_info(path)
 			
 			if ext == 'xls':
 				xls_file = ConXLS(path)
