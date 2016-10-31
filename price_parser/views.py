@@ -1,6 +1,8 @@
 from django.shortcuts import redirect
 from django.views.generic import View
+from django.conf import settings
 from main_site.models import *
+from .form import *
 
 
 class ParseView(View):
