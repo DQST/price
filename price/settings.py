@@ -26,6 +26,7 @@ SECRET_KEY = '_87%$1#mv##6-jlfytq=hgwi#kchg1m6fo-lp%bvmahi2opdqo'
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    'price.tolkai.by',
     'price.tolkaiby.vh95.hosterby.com',
 ]
 
