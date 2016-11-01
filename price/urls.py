@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^login/',	LoginView.as_view()),
     url(r'^logout/', LogoutView.as_view()),
     url(r'^price/', include('main_site.urls'), name='main'),
+    url(r'^parser/', include('price_parser.urls'), name='parser'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

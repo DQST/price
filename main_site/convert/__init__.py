@@ -1,18 +1,23 @@
 import openpyxl
+from openpyxl.utils import *
 from yattag import *
+import codecs
 
 
 class BConverter(object):
 	def __init__(self, path, head_row=0, start_row=1):
 		wb = openpyxl.load_workbook(path, data_only=True)
 		self.sh = wb.active
-		self.headers = [i.value.capitalize() for i in self.sh[head_row:head_row] if i.value is not None]
-		for i in range(len(self.headers)):
-			self.headers[i] = self.headers[i].strip()
-			self.headers[i] = self.headers[i].replace(' ', '_')
-			self.headers[i] = self.headers[i].replace('\n', '')
+		self.headers = [str(i.value).strip() for i in self.sh[head_row:head_row] if i.value is not None]
 		self.start_row = abs(start_row) - 1
 		self.objects = self.__parse(head_row)
+
+	def __unmerged_value(self, cell):
+		for irange in self.sh.merged_cell_ranges:
+			min_col, min_row, max_col, max_row =range_boundaries(irange)
+			if cell.row in range(min_row,max_row+1) and column_index_from_string(cell.column) in range(min_col, max_col+1):
+				return self.sh.cell(None, min_row, min_col).value
+		return cell.value
 
 	def __empty(self, o):
 		e = 0
@@ -22,24 +27,21 @@ class BConverter(object):
 		if e == len(o):
 			return True
 		return False
-	
+
 	def __parse(self, head_row):
 		out = []
+		fun = lambda x: '' if x is None else x
 		for row in self.sh.iter_rows(row_offset=self.start_row):
-			obj = [(key, (lambda x: '' if x is None else x)(el.value)) for key, el in zip(self.headers, row)]
+			obj = [(key, fun(self.__unmerged_value(el))) for key, el in zip(self.headers, row)]
 			if not self.__empty(obj):
 				out.append(obj)
 		return out
-	
-	def save(self, path):
-		raise Exception('Переопределить метод!')
 
 
 class ToXML(BConverter):
 	def save(self, path):
 		'''Doc string:
 		Save file as xml using argument: path'''
-		import codecs
 		doc, tag, text, line = Doc().ttl()
 
 		headers_len = len(self.headers)
@@ -53,7 +55,7 @@ class ToXML(BConverter):
 				for i, obj in zip(range(1, objects_len + 1), self.objects):
 					with tag('object', id=str(i)):
 						for key, value in obj:
-							with tag(key):
+							with tag('field', name=key):
 								text(value)
 
 		pretty_string = indent(
@@ -66,17 +68,17 @@ class ToXML(BConverter):
 			f.write('%s\n' % pretty_string)
 
 
-class ConXLS:
+class XLStoXLSX:
 	def __init__(self, path):
 		self.input_path = path
 	
-	def __unmerged_value(self, rowx, colx, sh):
-		for crange in sh.merged_cells:
+	def __unmerged_value(self, rowx, colx, thesheet):
+		for crange in thesheet.merged_cells:
 			rlo, rhi, clo, chi = crange
 			if rowx in range(rlo, rhi):
 				if colx in range(clo, chi):
-					return sh.cell_value(rlo,clo)
-		return sh.cell_value(rowx,colx)
+					return thesheet.cell_value(rlo,clo)
+		return thesheet.cell_value(rowx,colx)
 	
 	def save(self, path):
 		import xlrd
