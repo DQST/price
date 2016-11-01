@@ -4,6 +4,7 @@ from .models import *
 from .form import *
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponse
 
 
 class SearchView(View):
@@ -69,13 +70,21 @@ class AjaxView(SearchView):
 
 class FastSearchView(SearchView):
 	def get(self, request):
-		from django.http import HttpResponse
 		if 'q' in request.GET and request.GET['q']:
 			q = request.GET['q']
-			data = self.parse(q, 'name')
+			data = self.parse(q, 'name')[:30]
 			if data:	
 				return HttpResponse('$'.join([i.name.strip() for i in data]))
-		return HttpResponse('Ничего не найдено: %s' % q)
+		return HttpResponse('')
+
+
+class CategoryView(View):
+	def get(self, request):
+		if 'c' in request.GET and request.GET['c']:
+			c = Categories(name=request.GET['c'])
+			c.save()
+			return HttpResponse('%s,%s' % (c.id, c.name))
+		return HttpResponse('')
 
 
 class ImportView(View):

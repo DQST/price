@@ -12,20 +12,25 @@
 			</div>
 		</div>
 		<div class="col-md-8">
-			<form action="/parser/" method="post">
+			<form action="/parser/" method="post" class="form">
 				{% csrf_token %}
 				<div class="form-group">
 					<label>Выберите категорию:</label>
-					<select name="category" class="form-control">
-						{% if categories_list %}
-							<option value="not_select">Не выбрана</option>
-							{% for i in categories_list %}
-								<option value="{{ i.id }}">{{ i.name }}</option>
-							{% endfor %}
-						{% else %}
-							<option value="empty">Нет доступных категорий</option>
-						{% endif %}
-					</select>
+					<div class="row">
+						<div class="col-md-11">
+							<select name="category" class="form-control">
+								{% if categories_list %}
+									<option value="not_select">------------</option>
+									{% for i in categories_list %}
+										<option value="{{ i.id }}">{{ i.name }}</option>
+									{% endfor %}
+								{% else %}
+									<option value="empty">Нет доступных категорий</option>
+								{% endif %}
+							</select>
+						</div>
+						<button id="category-add" class="btn btn-deffault" type="button" data-dismiss="modal" data-target="modal-window"><span class="glyphicon glyphicon-plus"></span></button>	
+					</div>
 				</div>
 				<div class="form-group">
 					<label>Введите поставщика:</label>
@@ -73,7 +78,25 @@
 					</button>
 				</div>
 			</form>
-		</div>
-		<div class="col-md-2"></div>
+			<div id="modal-window" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Добавление категории</h4>
+						</div>
+						<div class="modal-body">
+							<div class="form-group-inline">
+								<label>Название: </label>
+								<input class="form-control" type="text" name="modal-category-name" required></input>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-success" data-dismiss="modal" id="modal-ok-btn">OK</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2"></div>
 	</div>
 {% endblock %}

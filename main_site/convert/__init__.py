@@ -8,8 +8,8 @@ class BConverter(object):
 	def __init__(self, path, head_row=0, start_row=1):
 		wb = openpyxl.load_workbook(path, data_only=True)
 		self.sh = wb.active
-		self.headers = [str(i.value).strip() for i in self.sh[head_row:head_row] if i.value is not None]
-		self.start_row = abs(start_row) - 1
+		self.headers = [str(i.value).strip().replace('\n', '') for i in self.sh[head_row:head_row] if i.value is not None]
+		self.start_row = start_row - 1
 		self.objects = self.__parse(head_row)
 
 	def __unmerged_value(self, cell):
