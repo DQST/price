@@ -7,11 +7,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class SearchView(View):
-	def parse(self, query, filter_by):
+	def parse(self, q, filter_by):
 		if filter_by == 'articul':
-			data = Products.objects.filter(articul=query)
+			data = Products.objects.filter(articul=q)
 		else:
-			data = Products.objects.filter(name__icontains=query)
+			data = Products.objects.filter(name__contains=q)
 		return data
 
 	def get_pagintations(self, paginator=None, articles=None, cur_page=0, max_pages_count=9):
@@ -20,8 +20,6 @@ class SearchView(View):
 
 		paginations = [i+1 for i in range(paginator.num_pages)]
 		if paginator.num_pages > max_pages_count:
-			if len(articles) == 1:
-				articles = articles[0]
 			if 0 <= cur_page < 7:
 				paginations = paginations[:9]
 				paginations.extend(['...', paginator.num_pages])
