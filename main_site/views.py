@@ -89,10 +89,9 @@ class CategoryView(View):
 
 class ImportView(View):
 	def get_info(self, s):
-		import re
-		comp = re.compile('uploads/(?P<name>.*?)\.(?P<ext>\w+)')
-		rez = comp.search(s).groupdict()
-		return rez['name'], rez['ext']
+		import os
+		name, extension = os.path.splitext(s)
+		return name, extension[1:]
 
 	def post(self, request):
 		from .convert import ToXML, XLStoXLSX
