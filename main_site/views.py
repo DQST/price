@@ -4,14 +4,15 @@ from .models import *
 from .form import *
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponse
 
 
 class SearchView(View):
-	def parse(self, query, filter_by):
+	def parse(self, q, filter_by):
 		if filter_by == 'articul':
-			data = Products.objects.filter(articul=query)
+			data = Products.objects.filter(articul=q)
 		else:
-			data = Products.objects.filter(name__icontains=query)
+			data = Products.objects.filter(name__contains=q)
 		return data
 
 	def get_pagintations(self, paginator=None, articles=None, cur_page=0, max_pages_count=9):
@@ -20,8 +21,6 @@ class SearchView(View):
 
 		paginations = [i+1 for i in range(paginator.num_pages)]
 		if paginator.num_pages > max_pages_count:
-			if len(articles) == 1:
-				articles = articles[0]
 			if 0 <= cur_page < 7:
 				paginations = paginations[:9]
 				paginations.extend(['...', paginator.num_pages])
@@ -71,21 +70,28 @@ class AjaxView(SearchView):
 
 class FastSearchView(SearchView):
 	def get(self, request):
-		from django.http import HttpResponse
 		if 'q' in request.GET and request.GET['q']:
 			q = request.GET['q']
-			data = self.parse(q, 'name')
+			data = self.parse(q, 'name')[:30]
 			if data:	
 				return HttpResponse('$'.join([i.name.strip() for i in data]))
-		return HttpResponse('Ничего не найдено: %s' % q)
+		return HttpResponse('')
+
+
+class CategoryView(View):
+	def get(self, request):
+		if 'c' in request.GET and request.GET['c']:
+			c = Categories(name=request.GET['c'])
+			c.save()
+			return HttpResponse('%s,%s' % (c.id, c.name))
+		return HttpResponse('')
 
 
 class ImportView(View):
 	def get_info(self, s):
-		import re
-		comp = re.compile('uploads/(?P<name>.*?)\.(?P<ext>\w+)')
-		rez = comp.search(s).groupdict()
-		return rez['name'], rez['ext']
+		import os
+		name, extension = os.path.splitext(s)
+		return name, extension[1:]
 
 	def post(self, request):
 		from .convert import ToXML, XLStoXLSX

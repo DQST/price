@@ -20,6 +20,9 @@
 				overflow-x: hidden;
 			}
 			.bolden {font-weight: bold;}
+			#category-add {background-color: white; color: green; border: 0px;}
+			#category-add:hover {background-color: white; border: 0px;}
+			p {word-wrap: break-word;}
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function() {
@@ -42,6 +45,19 @@
 					connections.empty();
 					$('#sumbit-button').prop('disabled', true);
 				});
+				$('#category-add').click(function() {
+					$("#modal-window").modal();
+				});
+				$('#modal-ok-btn').click(function() {
+					var val = $('input[name="modal-category-name"]').val();
+					var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+					$.get('/price/cat/?csrfmiddlewaretoken='+csrf+'&c='+val, 
+						function(data) {
+							var a = data.split(',');
+							$('select[name="category"]').append('<option value="'+a[0]+'">'+a[1]+'</option>');
+						}
+					);
+				});
 				$('input[name=query]').autocomplete({
 					source: function(request, response) {
 						var q = $('.form-control').val();
@@ -49,7 +65,8 @@
 						if($('input[name="search_filter"]').attr('value') == 'name') {
 							$.get('/price/fast/?csrfmiddlewaretoken='+csrf+'&q='+q,
 								function(data) {
-									response(data.split('$'));
+									if(data.length > 0)
+										response(data.split('$'));
 								}
 							);
 						}
