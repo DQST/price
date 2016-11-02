@@ -135,3 +135,5 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = '/home/tolkaiby/public_html/price.tolkai.by/media/'
 MEDIA_URL = '/media/'
+
+ADMIN_MEDIA_PREFIX = '/static/admin/'
