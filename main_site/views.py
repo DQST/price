@@ -124,7 +124,7 @@ class ImportView(View):
 
 				return render(request, 'main_site/import2.html', {
 					'categories_list': Categories.objects.all(),
-					'file_name': name+'.'+ext,
+					'file_name': newdoc.docfile.name,
 					'file_size': file.size,
 					'headers': xml.headers,
 				})
