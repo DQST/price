@@ -97,33 +97,58 @@ class ImportView(View):
 		from .convert import ToXML, XLStoXLSX
 		import transliterate
 		from transliterate import slugify, detect_language
+		import xml.etree.ElementTree as et
+		import base64
 
 		form = DocumentForm(request.POST, request.FILES)
 		if form.is_valid():
 			file = form.cleaned_data.get('file')
 			head_offset = form.cleaned_data.get('row_head_offset')
 			data_offset = form.cleaned_data.get('row_data_offset')
+			file_format = form.cleaned_data.get('file_format')
 
 			newdoc = Documents(docfile=file)
 			newdoc.save()
 
 			path = '%s%s' % (settings.MEDIA_ROOT, newdoc.docfile.name)
-			name, ext = self.get_info(path)
-			
-			if ext == 'xls':
-				xls_file = XLStoXLSX(path)
-				path = path.replace('xls', 'xlsx')
-				xls_file.save(path)
-			
-			xml = ToXML(path, head_offset, data_offset)
-			xml.save(path.replace('xlsx', 'xml'))
+			if file_format == 'excel':
+				name, ext = self.get_info(path)
+				
+				if ext == 'xls':
+					xls_file = XLStoXLSX(path)
+					path = path.replace('xls', 'xlsx')
+					xls_file.save(path)
+				
+				xml = ToXML(path, head_offset, data_offset)
+				xml.save(path.replace('xlsx', 'xml'))
 
-			return render(request, 'main_site/import2.html', {
-				'categories_list': Categories.objects.all(),
-				'file_name': name+'.'+ext,
-				'file_size': file.size,
-				'headers': xml.headers,
-			})
+				return render(request, 'main_site/import2.html', {
+					'categories_list': Categories.objects.all(),
+					'file_name': name+'.'+ext,
+					'file_size': file.size,
+					'headers': xml.headers,
+				})
+			elif file_format == 'xml':
+				columns = {'id':'articul','name':'name', 'customerId': 'dealer', 'price': 'recomend_price'}
+				tree = et.parse(path)
+				root = tree.getroot()
+				for table in root.findall('database/table'):
+					p = Products()
+					for col in table.findall('column'):
+						col_name = col.get('name')
+						if col_name in columns.keys():
+							if col_name == 'customerId':
+								dealer = base64.b64decode(col.text.encode()).decode()
+								if not Dealer.objects.filter(name=dealer).exists():
+									Dealer.objects.create(name=dealer)
+								dealer = Dealer.objects.get(name=dealer)
+								p.dealer = dealer
+								p.producer = dealer
+							else:
+								column = columns[col_name]
+								p.__dict__[column] = col.text
+					p.save()
+				return redirect('/price/')
 		return render(request, 'main_site/import.html', {'errors': form.errors})
 
 	def get(self, request):
