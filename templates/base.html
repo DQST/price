@@ -30,6 +30,7 @@
 				var connections = $('#connections');
 				var file_headers = $('#file-headers');
 				var json_object = {};
+				var last = '';
 				$('#connect-button').click(function() {
 					if($('#std-headers').val() != '' && file_headers.val() != '')
 					{
@@ -45,6 +46,18 @@
 					connections.empty();
 					$('#sumbit-button').prop('disabled', true);
 				});
+				$('select[name=file-format]').change(function() {
+					var group = '';
+					$('select option:selected').each(function() {
+						group = $(this).attr('group');
+						if(last != '') {
+							$('#'+group).css('display', 'block');
+							$('#'+last).css('display', 'none');
+						}
+						last = group;
+						$('input[name="file_format"]').val($(this).attr('value'));
+					});
+				}).trigger('change');
 				$('#category-add').click(function() {
 					$("#modal-window").modal();
 				});

@@ -18,21 +18,37 @@
 					<input name="file" type="file" required>
 				</div>
 				<div class="form-group">
-					<label>Строка заголовок:</label>
-					<input class="form-control" name="row_head_offset" type="number" min="1" value="1" required/>
+					<label>Формат:</label>
+					<select name="file-format" class="form-control">
+						<option value="excel" group="group-one">Excel</option>
+						<option value="xml" group="group-two">XML</option>
+					</select>
 				</div>
-				<div class="form-group">
-					<label>Строка данных:</label>
-					<input class="form-control" name="row_data_offset" type="number" min="2" value="2" required/>
+				<input type="hidden" name="file_format" value="excel"></input>
+				<div class="panel panel-info">
+					<div class="panel-heading">Параметры формата:</div>
+					<div class="panel-body">
+						<div id="group-one" style="display: block;">
+							<div class="form-group">
+								<label>Строка заголовок:</label>
+								<input class="form-control" name="row_head_offset" type="number" min="1" value="1" required/>
+							</div>
+							<div class="form-group">
+								<label>Строка данных:</label>
+								<input class="form-control" name="row_data_offset" type="number" min="2" value="2" required/>
+							</div>
+							<button type="reset" id="reset-button" class="btn btn-danger">
+								<span class="glyphicon glyphicon-erase"></span> Сброс
+							</button>
+						</div>
+						<div id="group-two" style="display: none;">
+							<p class="form-control-static">Для этого формата нет настраиваемых параметров</p>
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-success">
-						<span class="glyphicon glyphicon-cloud-upload"></span> Загрузить
-					</button>
-					<button type="reset" id="reset-button" class="btn btn-danger">
-						<span class="glyphicon glyphicon-erase"></span> Сброс
-					</button>
-				</div>
+				<button type="submit" class="btn btn-info">
+					<span class="glyphicon glyphicon-cloud-upload"></span> Загрузить
+				</button>
 			</form>
 		</div>
 		<div class="col-md-2"></div>

@@ -16,6 +16,7 @@ class DocumentForm(forms.Form):
 	file = forms.FileField()
 	row_head_offset = forms.IntegerField()
 	row_data_offset = forms.IntegerField()
+	file_format = forms.CharField()
 
 
 class ImportForm(forms.Form):
