@@ -10,7 +10,7 @@ class ParseView(View):
 		import xml.etree.ElementTree as ET
 
 		file = file[:file.index('.')+1]+'xml'
-		path = '%s/uploads/%s' % (settings.MEDIA_ROOT, file)
+		path = '%s/%s' % (settings.MEDIA_ROOT, file)
 		tree = ET.parse(path)
 		root = tree.getroot()
 
