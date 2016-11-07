@@ -9,7 +9,9 @@ class ParseView(View):
 	def load(self, obj, file, category, dealer):
 		import xml.etree.ElementTree as ET
 
-		file = file[:file.index('.')+1]+'xml'
+		file = file[::-1]
+		file = file.replace(file[:file.find('.')], 'lmx')
+		file = file[::-1]
 		path = '%s/%s' % (settings.MEDIA_ROOT, file)
 		tree = ET.parse(path)
 		root = tree.getroot()
