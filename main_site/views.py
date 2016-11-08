@@ -90,7 +90,7 @@ class CategoryView(View):
 
 class DocumentRemoveView(View):
 	def get(self, request):
-		if 'k' in request.GET and request.GET['k'] and request.user.is_superuser():
+		if 'k' in request.GET and request.GET['k'] and request.user.is_superuser:
 			k = request.GET['k']
 			q = Products.objects.filter(document__id=k)
 			if q.exists():
