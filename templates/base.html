@@ -64,8 +64,8 @@
 					$('select option:selected').each(function() {
 						group = $(this).attr('group');
 						if(last != '') {
-							$('#'+group).css('display', 'block');
-							$('#'+last).css('display', 'none');
+							$(group).css('display', 'block');
+							$(last).css('display', 'none');
 						}
 						last = group;
 						$('input[name="file_format"]').val($(this).attr('value'));
