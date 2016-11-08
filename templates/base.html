@@ -113,6 +113,7 @@
 					var csrf = $('input[name="csrfmiddlewaretoken"]').val();
 					var p = Number($('input[name="p"]').attr('value'));
 					if(q.length > 0 && q != ' ') {
+						q = q.toUpperCase();
 						$.get('/price/ajax/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
 							function(data) {
 								$('#search-content').html(data);

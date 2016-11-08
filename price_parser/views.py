@@ -26,8 +26,8 @@ class ParseView(View):
 			p.document = document
 			for k in obj.keys():
 				for i in o.findall('field'):
-					if obj[k] == i.get('name'):
-						p.__dict__[k] = i.text
+					if obj[k] == i.get('name') and i.text is not None:
+						p.__dict__[k] = i.text.upper()
 			p.save()
 
 
