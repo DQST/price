@@ -41,7 +41,8 @@ class SearchView(View):
 		if not request.user.is_authenticated():
 			return redirect('/')
 		articles = Products.objects.all().order_by('-id')[:30]
-		return render(request, 'main_site/rezult.html', {'articles': articles})
+		deals = ((i.name, [j for j in Documents.objects.filter(dealer__id=i.id)]) for i in Dealer.objects.all())
+		return render(request, 'main_site/rezult.html', {'articles': articles, 'dealers': deals})
 
 
 class AjaxView(SearchView):
@@ -84,6 +85,18 @@ class CategoryView(View):
 			c = Categories(name=request.GET['c'])
 			c.save()
 			return HttpResponse('%s,%s' % (c.id, c.name))
+		return HttpResponse('')
+
+
+class DocumentRemoveView(View):
+	def get(self, request):
+		if 'k' in request.GET and request.GET['k']:
+			k = request.GET['k']
+			q = Products.objects.filter(document__id=k)
+			if q.exists():
+				q.delete()
+				Documents.objects.get(id=k).delete()
+			return HttpResponse('ok')
 		return HttpResponse('')
 
 

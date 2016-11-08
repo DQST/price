@@ -42,6 +42,19 @@
 							$('#sumbit-button').prop('disabled', false);
 					}
 				});
+				$('.list-group-item #rem-file-link').click(function() {
+					var k = $(this).attr('href').replace('#', '');
+					var badge = $('#'+$(this).attr('badge'));
+					var parent = $(this).parent();
+					$.get('/price/remove/?k='+k, 
+						function(data) {
+							if(data == 'ok') {
+								parent.remove();
+								var num = Number(badge.text()) - 1;
+								badge.text(num);
+							}
+						});
+				});
 				$('#reset-button').click(function() {
 					connections.empty();
 					$('#sumbit-button').prop('disabled', true);
@@ -99,7 +112,7 @@
 					var filter = $('input[name="search_filter"]').attr('value');
 					var csrf = $('input[name="csrfmiddlewaretoken"]').val();
 					var p = Number($('input[name="p"]').attr('value'));
-					if(q.length > 0) {
+					if(q.length > 0 && q != ' ') {
 						$.get('/price/ajax/?csrfmiddlewaretoken='+csrf+'&search_filter='+filter+'&query='+q+'&p='+p,
 							function(data) {
 								$('#search-content').html(data);
@@ -136,7 +149,8 @@
 		</nav>
 		<div class="container-fluid content">
 			<div class="row content">
-				<div class="col-md-2 content"></div>
+				<div class="col-md-2 content">
+				</div>
 				<div class="col-md-8 content">
 					<div id="search-content">
 						{% block content %}{% endblock %}

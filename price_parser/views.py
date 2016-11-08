@@ -6,7 +6,7 @@ from .form import *
 
 
 class ParseView(View):
-	def load(self, obj, file, category, dealer):
+	def load(self, obj, file, category, dealer, document):
 		import xml.etree.ElementTree as ET
 
 		file = file[::-1]
@@ -23,6 +23,7 @@ class ParseView(View):
 			p = Products()
 			p.category = category
 			p.dealer = dealer
+			p.document = document
 			for k in obj.keys():
 				for i in o.findall('field'):
 					if obj[k] == i.get('name'):
@@ -43,6 +44,10 @@ class ParseView(View):
 				Dealer.objects.create(name=dealer)
 			dealer = Dealer.objects.get(name=dealer)
 			
+			doc = Documents.objects.get(docfile=file)
+			doc.dealer = dealer
+			doc.save()
+			
 			json_object = json.loads(json_str)
-			self.load(json_object, file, category, dealer)
+			self.load(json_object, file, category, dealer.name, doc)
 		return redirect('/price/')
