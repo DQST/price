@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^ajax/$', AjaxView.as_view()),
     url(r'^fast/$', FastSearchView.as_view()),
     url(r'^cat/$', CategoryView.as_view()),
+    url(r'^remove/$', DocumentRemoveView.as_view()),
 ]

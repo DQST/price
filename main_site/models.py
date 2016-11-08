@@ -1,16 +1,6 @@
 from django.db import models
 
 
-class Documents(models.Model):
-	docfile = models.FileField(upload_to='uploads/')
-
-	def __str__(self):
-		return 'File: %s' % self.docfile.name
-
-	class Meta:
-		db_table = 't_documents'
-
-
 class Categories(models.Model):
 	name = models.CharField(max_length=255)
 
@@ -31,9 +21,21 @@ class Dealer(models.Model):
 		db_table = 't_dealer'
 
 
+class Documents(models.Model):
+	docfile = models.FileField(upload_to='uploads/')
+	dealer = models.ForeignKey(Dealer, db_column='dealer_id', null=True, on_delete=models.SET_NULL)
+
+	def __str__(self):
+		return self.docfile.name
+
+	class Meta:
+		db_table = 't_documents'
+
+
 class Products(models.Model):
 	category = models.ForeignKey(Categories, db_column='category_id', null=True, on_delete=models.SET_NULL)
-	dealer = models.ForeignKey(Dealer, db_column='dealer_id', null=True, on_delete=models.SET_NULL)
+	document = models.ForeignKey(Documents, db_column='document_id', null=True, on_delete=models.SET_NULL)
+	dealer = models.CharField(max_length=255, null=True)			# поставщик
 	articul = models.CharField(max_length=255, null=True)			# артикул, maybe string!
 	name = models.CharField(max_length=255, null=True)				# название
 	model = models.CharField(max_length=255, null=True)				# модель

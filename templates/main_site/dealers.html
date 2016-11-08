@@ -1,0 +1,33 @@
+<h4>Прайсы поставщиков:</h4>
+<div class="panel-group" id="accordion">
+	{% for key, value in dealers %}
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}">
+						Поставщик &laquo;{{ key }}&raquo; 
+						<span class="badge" id="badge{{ forloop.counter }}">{{ value|length }}</span>
+					</a>
+				</h4>
+			</div>
+			{% if forloop.counter == 1 %}
+				<div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in">
+			{% else %}
+				<div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+			{% endif %}
+				<ul class="list-group">
+					{% for v in value %}
+						<li class="list-group-item">{{ v.docfile }} 
+							<a href="#{{ v.id }}" id="rem-file-link" badge="badge{{ forloop.parentloop.counter }}">
+							<span class="glyphicon glyphicon-remove"></span></a>
+						</li>
+					{% empty %}
+						<li class="list-group-item">Для поставщика &laquo;{{ key }}&raquo; нет загруженных прайсов.</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	{% empty %}
+		<h4>Нет поставщиков.</h4>
+	{% endfor %}
+</div>
