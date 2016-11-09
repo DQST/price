@@ -22,6 +22,8 @@
 			.bolden {font-weight: bold;}
 			#category-add {background-color: white; color: green; border: 0px;}
 			#category-add:hover {background-color: white; border: 0px;}
+			#rem-file-link {color: red;}
+			#rem-file-link:hover {color: #bc0303;}
 			p {word-wrap: break-word;}
 		</style>
 		<script type="text/javascript">
@@ -44,16 +46,14 @@
 				});
 				$('.list-group-item #rem-file-link').click(function() {
 					var k = $(this).attr('href').replace('#', '');
-					var badge = $('#'+$(this).attr('badge'));
-					var parent = $(this).parent();
-					$.get('/price/remove/?k='+k, 
+					$('#delModal').modal();
+					$('#delModal .btn-ok').click(function() {
+						$.get('/price/remove/?k='+k, 
 						function(data) {
-							if(data == 'ok') {
-								parent.remove();
-								var num = Number(badge.text()) - 1;
-								badge.text(num);
-							}
+							if(data == 'ok')
+								location.reload(true);
 						});
+					});
 				});
 				$('#reset-button').click(function() {
 					connections.empty();
