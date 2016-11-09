@@ -23,7 +23,7 @@
 						<th class="text-left">{{ i.articul|default:'&ndash;' }}</th>
 						<th class="text-left">
 							<a href="#" title="Поставщик" data-toggle="popover" data-trigger="hover"
-							data-content="{{ i.dealer }}">{{ i.name }}</a>
+							data-content="{{ i.dealer }}">{{ i.name|default:'&ndash;' }}</a>
 						</th>
 						<th class="text-center">{{ i.producer|default:'&ndash;' }}</th>
 						<th class="text-center">{{ i.recomend_price|default:'&ndash;' }}</th>
