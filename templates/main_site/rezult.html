@@ -45,7 +45,21 @@
 {% block content %}
 	{% if user.is_superuser %}
 		<div style="margin-top: 60px;">
-			{% include 'main_site/dealers.html' %}
+			<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#home">Главная</a></li>
+				<li><a data-toggle="tab" href="#menu1">Поставщики</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="home" class="tab-pane fade in active">
+					<p></p>
+					{% include 'main_site/table.html' %}
+				</div>
+				<div id="menu1" class="tab-pane fade">
+					<h3>Поставщики</h3>
+					{% include 'main_site/dealers.html' %}
+				</div>
+			</div>
 		</div>
 	{% else %}
 		{% include 'main_site/table.html' %}
