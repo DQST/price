@@ -1,4 +1,3 @@
-<h4>Прайсы поставщиков:</h4>
 <div class="panel-group" id="accordion">
 	{% for key, value in dealers %}
 		<div class="panel panel-info">
@@ -10,7 +9,7 @@
 					</a>
 				</h4>
 			</div>
-			{% if forloop.counter == 1 %}
+			{% if forloop.counter == 1 and value|length > 0 %}
 				<div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in">
 			{% else %}
 				<div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
