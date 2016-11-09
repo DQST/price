@@ -152,9 +152,6 @@ class ImportView(View):
 						if col_name in columns.keys():
 							if col_name == 'customerId':
 								dealer = base64.b64decode(col.text.encode()).decode()
-								if not Dealer.objects.filter(name=dealer).exists():
-									Dealer.objects.create(name=dealer)
-								dealer = Dealer.objects.get(name=dealer)
 								p.dealer = dealer
 								p.producer = dealer
 							else:
