@@ -23,7 +23,7 @@
 						<th class="text-left">{{ i.articul|default:'&ndash;' }}</th>
 						<th class="text-left">
 							<a href="#" title="Поставщик" data-toggle="popover" data-trigger="hover"
-							data-content="{{ i.dealer }}">{{ i.name }}</a>
+							data-content="{{ i.dealer }}">{{ i.name|default:'&ndash;' }}</a>
 						</th>
 						<th class="text-center">{{ i.producer|default:'&ndash;' }}</th>
 						<th class="text-center">{{ i.recomend_price|default:'&ndash;' }}</th>
@@ -50,7 +50,7 @@
 {% else %}
 	<div class="alert alert-danger fade in">
 		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-		<strong title="Дратути!">ОШИБКА!</strong> По запросу: <b>{{ query }}</b> ничего не найдено. <b>Во всём вините программистов!</b>
+		<strong title="Дратути!">ОШИБКА!</strong> По запросу: <b>{{ query }}</b> ничего не найдено.
 	</div>
 	<p>Попробуйте изменить запрос и повторить поиск.</p>
 {% endif %}
