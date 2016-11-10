@@ -152,8 +152,14 @@ class ImportView(View):
 						if col_name in columns.keys():
 							if col_name == 'customerId':
 								dealer = base64.b64decode(col.text.encode()).decode()
-								p.dealer = dealer
-								p.producer = dealer
+								if not Dealer.objects.filter(name=dealer).exists():
+									Dealer.objects.create(name=dealer)
+								dealer = Dealer.objects.get(name=dealer)
+								newdoc.dealer = dealer
+								newdoc.save()
+								p.dealer = dealer.name
+								p.document = newdoc
+								p.producer = dealer.name
 							else:
 								column = columns[col_name]
 								p.__dict__[column] = col.text
